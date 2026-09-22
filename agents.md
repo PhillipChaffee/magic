@@ -1,8 +1,10 @@
 # Agent Guidelines
 
-This file is the kit's always-applied convention layer (AGENTS.md-standard
-compatible) and doubles as this repo's own instructions. Consumers that
-auto-load `agents.md` get the distilled rules below; full rule texts live in
+This file is this repo's own instruction layer: the distilled conventions
+below govern sessions working on this repo, and the Agent skills section
+configures this repo's own tooling. The kit ships the consumer copy — the
+same distillation without the repo sections — from `agents.kit.md`, installed
+as `~/.agents/agents.md` (the protocol home). Full rule texts live in
 `rules/`.
 
 ## Always-applied conventions
