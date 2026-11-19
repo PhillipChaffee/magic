@@ -139,13 +139,6 @@ MAPPING_DOCS = {
     "skills/magic-mode/references/forge-operations.md",
     "skills/setup-magic/references/issue-tracker-templates.md",
 }
-# Files the owner restored to upstream wording on purpose.
-VERBATIM_LIST = Path("scripts/magic-verbatim.txt")
-if VERBATIM_LIST.exists():
-    for line in VERBATIM_LIST.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            MAPPING_DOCS.add(line)
 # Neutrality guard: no vendor model slug, capitalized
 # vendor model prose name, Cursor subagent field, or forge CLI in kit skills
 # and agents.

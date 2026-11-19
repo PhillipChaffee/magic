@@ -125,11 +125,7 @@ test("the five adapted SKILL.md files sort their frontmatter keys", () => {
 	}
 });
 
-test("the lint configs and the verbatim list stop exempting the adapted upstream skills", () => {
-	const verbatim = read("scripts/magic-verbatim.txt");
-	assert.doesNotMatch(verbatim, /^skills\//m, "magic-verbatim.txt holds no skill path");
-	assert.match(verbatim, /^#/m, "magic-verbatim.txt keeps a comment header explaining why it is empty");
-
+test("the lint configs stop exempting the adapted upstream skills", () => {
 	const markdownlint = read(".markdownlint-cli2.jsonc");
 	for (const dir of ["writing-skills", "writing-plans", "subagent-driven-development"]) {
 		assert.ok(

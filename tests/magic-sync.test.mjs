@@ -171,13 +171,6 @@ test("magic-mode and PR playbooks wire /make-pr-easy-to-review when opening or u
 		}
 	}
 
-	const verbatimList = fs.readFileSync(path.join(repoDir, "scripts/magic-verbatim.txt"), "utf8");
-	assert.doesNotMatch(
-		verbatimList,
-		/^skills\//m,
-		"make-pr-easy-to-review is adapted now, so no skill path stays in the verbatim list",
-	);
-
 	const makePr = fs.readFileSync(path.join(repoDir, "skills/make-pr-easy-to-review/SKILL.md"), "utf8");
 	assert.match(makePr, /forge-operations\.md/, "the skill resolves its forge operations through the adapter");
 	assert.match(makePr, /issue-tracker\.md/, "the skill resolves the repository's forge once per session");

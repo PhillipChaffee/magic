@@ -10,4 +10,3 @@ node_modules/
 /scripts/*
 !/scripts/install.sh
 !/scripts/validate.sh
-!/scripts/magic-verbatim.txt

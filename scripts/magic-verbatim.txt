@@ -1,5 +1,0 @@
-# Files restored to upstream wording on purpose, one repo-relative path
-# per line. validate.sh skips its stale-Cursor-path check and its vendor,
-# Cursor, and forge term guard for these files; every other check still runs.
-# The list is empty: every adapted skill now names the operation, role, or
-# adapter the kit resolves instead of the upstream command, model, or path.
