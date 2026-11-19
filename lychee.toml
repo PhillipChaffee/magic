@@ -10,6 +10,4 @@ accept = ["200..=204", "429", "502..=504"]
 # Remap GitHub tree/blob subpaths to repo roots so lychee validates them via
 # api.github.com (with GITHUB_TOKEN) instead of scraping github.com HTML over HTTP/2.
 remap = ["^https://github\\.com/([^/]+/[^/]+)/(?:tree|blob)/.* https://github.com/$1"]
-# Upstream skill documents keep their plugin-local and illustrative links,
-# which resolve only inside the upstream plugins and never in this repo.
-exclude_path = ["./coverage", "./skills-disabled"]
+exclude_path = ["./coverage"]

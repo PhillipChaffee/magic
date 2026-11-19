@@ -1,6 +1,6 @@
 # Forge operations
 
-The kit is forge-agnostic (ADR-0007). magic skills name the operation they need on the code host and never the command. This file lists the operations and how to resolve them.
+The kit is forge-agnostic. magic skills name the operation they need on the code host and never the command. This file lists the operations and how to resolve them.
 
 ## Resolve the forge once
 

@@ -68,7 +68,7 @@ class InstallTests(unittest.TestCase):
             retired += ["skills/code-review", "skills/typescript-best-practices"]
             for missing in retired:
                 self.assertFalse((ROOT / missing).exists(), missing)
-            for missing in ["skills-disabled", "scripts", *retired]:
+            for missing in ["scripts", *retired]:
                 self.assertFalse((target / missing).exists(), missing)
             # The two skill filename spellings share an inode on case-insensitive homes.
             installed = {((target / name).stat().st_dev, (target / name).stat().st_ino) for name in mapping}

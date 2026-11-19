@@ -46,7 +46,7 @@ You might be wondering what happens if you use the harness's automatic model sel
 
 Scope 2 is idempotent, so you can run it in a new repo without repeating Scope 1. It checks `docs/agents/issue-tracker.md`. When the file is absent, it reads `git remote -v` and the tools in the session, asks one question, and writes the file from [`issue-tracker-templates.md`](../../skills/setup-magic/references/issue-tracker-templates.md). The file records where issues live and the command for every issue and PR operation a magic skill needs, including all 16 forge operations.
 
-Scope 2 also offers a minimal `CONTEXT.md` and a `docs/adr/` stub when they are absent. On a greenfield repo with no commits or lint setup, it checks that the matching `init-<lang>-repo` gates ran, per [`new-repo-setup.md`](../../rules/new-repo-setup.md).
+Scope 2 also offers a minimal `CONTEXT.md` when it is absent. On a greenfield repo with no commits or lint setup, it checks that the matching `init-<lang>-repo` gates ran, per [`new-repo-setup.md`](../../rules/new-repo-setup.md).
 
 ## Accept the verification offers, or don't
 

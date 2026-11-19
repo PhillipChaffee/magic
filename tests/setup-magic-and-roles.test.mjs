@@ -259,7 +259,6 @@ test("setup-magic SKILL.md offers Scope 1 and Scope 2 with the same tier and rol
 		"docs/agents/issue-tracker.md",
 		"references/issue-tracker-templates.md",
 		"CONTEXT.md",
-		"docs/adr/",
 		"init-<lang>-repo",
 		"`/create-verification-skill`",
 		"`/create-formal-verification-skill`",

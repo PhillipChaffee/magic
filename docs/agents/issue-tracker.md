@@ -1,6 +1,6 @@
 # Issue tracker
 
-This repository is `PhillipChaffee/magic` on GitHub. Issues live in GitHub Issues and proposed changes live in GitHub pull requests. Use the `gh` command-line tool or the GitHub MCP server. The forge choice follows [ADR-0007](../adr/0007-forge-agnostic.md).
+This repository is `PhillipChaffee/magic` on GitHub. Issues live in GitHub Issues and proposed changes live in GitHub pull requests. Use the `gh` command-line tool or the GitHub MCP server.
 
 ## Issue operations
 

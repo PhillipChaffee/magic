@@ -490,31 +490,6 @@ test("no active skill and no magic-guide page sends authors to the retired creat
 	assert.deepEqual(offenders, [], "skill authoring routes through /writing-skills and /tdd ships in the kit");
 });
 
-test("the superseded ADRs are marked and the pstack ADR records the current names", () => {
-	const adr4 = read("docs/adr/0004-mattpocock-main-flow.md");
-	const adr5 = read("docs/adr/0005-combined-two-tier-code-review.md");
-	for (const [rel, text] of [
-		["docs/adr/0004-mattpocock-main-flow.md", adr4],
-		["docs/adr/0005-combined-two-tier-code-review.md", adr5],
-	]) {
-		assert.match(text, /Status: Superseded/, `${rel} must open with a superseded notice`);
-		assert.match(text, /magic-mode/, `${rel} names the replacement entry point`);
-	}
-	assert.match(adr5, /code-review/, "the notice names the retired suite");
-	assert.match(adr4, /interrogate|thermo-nuclear-code-quality-review/);
-
-	const adr8 = read("docs/adr/0008-pstack-port.md");
-	assert.match(adr8, /`magic-mode`|magic-mode/);
-	assert.match(adr8, /`magic-agent`/);
-	assert.match(adr8, /`magic-models`/);
-	assert.match(adr8, /\/setup-magic/);
-	assert.match(adr8, /renam/i, "the port records the rename from the upstream names");
-	assert.match(adr8, /`poteto-mode`/, "the rename note keeps the old name for history");
-	assert.match(adr8, /25 one-principle skills/);
-	assert.match(adr8, /0\.15\.36/);
-	assert.match(adr8, /`tdd`, `typescript-best-practices`, and `make-bot-ui`/);
-});
-
 const TASK5_PROSE_SKILLS = TASK5_SKILLS.filter(
 	(rel) => !/writing-rules|proof-driven-development|proving-with|model-checking-protocols|analyzing-with-abstract|auditing-proof/.test(rel),
 );

@@ -29,7 +29,7 @@ Usage: scripts/install.sh [flags]
   --help            This text
 
 Safety: never touches any un-managed file in the target home. The kit pins no
-models (docs/adr/0001): the installer asks for your orchestrator/fast/main/deep
+models: the installer asks for your orchestrator/fast/main/deep
 choices and writes a consumer-local models.json beside the installed kit.
 USAGE
 }
@@ -143,7 +143,7 @@ write_models_config() {
 		echo "DRY-RUN would prompt and write $file"
 		return 0
 	fi
-	echo "Choose your harness's model for each tier (the kit pins none — ADR-0001)."
+	echo "Choose your harness's model for each tier (the kit pins none)."
 	read -rp "orchestrator model (the parent chat, optional, blank = fast or main): " orchestrator
 	read -rp "fast subagent model: " fast
 	read -rp "main subagent model: " main

@@ -1,6 +1,6 @@
 # Model roles
 
-The kit pins no models (ADR-0001). magic skills never name a model. They name a **role**, and the role resolves to a model when the subagent is spawned:
+The kit pins no models. magic skills never name a model. They name a **role**, and the role resolves to a model when the subagent is spawned:
 
 1. The role line in the consumer's `magic-models` role file, when it has one.
 2. The tier line for the role's tier in the same file.

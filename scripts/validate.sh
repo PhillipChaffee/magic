@@ -123,10 +123,7 @@ RULE_REF = re.compile(r"rules/([a-z][a-z0-9-]*)\.md")
 EXTERNAL_SKILL_IDS = {
     "add-language",
     "canvas", "create-rule",
-    "diagnosing-bugs", "domain-modeling", "grill-me", "grill-with-docs",
-    "grilling", "handoff", "implement", "improve-codebase-architecture",
-    "setup-matt-pocock-skills", "to-spec", "to-tickets", "triage",
-    "wayfinder",
+    "diagnosing-bugs", "triage", "wayfinder",
     "loop",
 }
 # Consumer-local rules the magic skills read but the kit never ships:
@@ -149,7 +146,7 @@ if VERBATIM_LIST.exists():
         line = line.strip()
         if line and not line.startswith("#"):
             MAPPING_DOCS.add(line)
-# ADR-0001 and ADR-0007 guard: no vendor model slug, capitalized
+# Neutrality guard: no vendor model slug, capitalized
 # vendor model prose name, Cursor subagent field, or forge CLI in kit skills
 # and agents.
 BANNED = re.compile(
@@ -202,7 +199,7 @@ for md in md_files:
     # 6. No vendor model, Cursor field, or forge CLI in kit content
     if rel not in MAPPING_DOCS:
         for hit in sorted(set(BANNED.findall(text))):
-            fail(f"{rel}: harness-, model-, or forge-specific term {hit!r} (ADR-0001, ADR-0007)")
+            fail(f"{rel}: harness-, model-, or forge-specific term {hit!r}")
     # 7. Code fence pairing check
     in_fence = False
     fence_char = None

@@ -23,7 +23,7 @@ A named specialist the harness dispatches into an isolated context; defined in `
 A code host with issues and PRs/MRs. Repository issue tracking is recorded in `docs/agents/issue-tracker.md`; imported upstream examples can name specific hosts. _Avoid_: code host, remote
 
 **Main flow**:
-The workflow selected by the consumer's installed skills; the disabled archive does not supply active commands. _Avoid_: pipeline, shipping flow
+The workflow selected by the consumer's installed skills. _Avoid_: pipeline, shipping flow
 
 **Worktree**:
 A linked checkout of a repo created with `git worktree add`, where every mutating session happens. _Avoid_: branch folder, scratch clone

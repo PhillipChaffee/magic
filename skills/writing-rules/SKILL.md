@@ -49,7 +49,7 @@ digraph rule_triage {
     "2. Does a baseline subagent already\nobey it without the rule?" -> "3. Is it a multi-step workflow,\nplaybook, or prompt template (>150 words)?" [label="no (fails in RED)"];
     "3. Is it a multi-step workflow,\nplaybook, or prompt template (>150 words)?" -> "Write an on-demand Skill instead\n(use /writing-skills)" [label="yes"];
     "3. Is it a multi-step workflow,\nplaybook, or prompt template (>150 words)?" -> "4. Is it language-, framework-,\nor company-stack specific?" [label="no (standing invariant)"];
-    "4. Is it language-, framework-,\nor company-stack specific?" -> "Write a project-local rule\n(never in global kit rules/)" [label="yes (ADR-0002)"];
+    "4. Is it language-, framework-,\nor company-stack specific?" -> "Write a project-local rule\n(never in global kit rules/)" [label="yes"];
     "4. Is it language-, framework-,\nor company-stack specific?" -> "Write a portable rule in rules/<name>.md\nor 1-bullet pointer in agents.kit.md" [label="no (universal)"];
 }
 ```
@@ -59,7 +59,7 @@ digraph rule_triage {
 | Mechanical check (JSON key sorting, import order, formatting, banned regex) | **Linter / formatter / pre-commit / CI script** (per [`/correct`](../correct/SKILL.md)) | Prose rule in `rules/` | LLMs drift on mechanical formatting; a deterministic script catches it 100% of the time at 0 token cost. |
 | Generic coding platitude ("write clean, readable code", "use descriptive variable names") | **None (delete it)** | `alwaysApply: true` rule | Models already try to write clean code by default. Platitude rules are pure context-window waste. |
 | Multi-step workflow, 7-step RCA playbook, or subagent prompt templates | **On-demand Skill** (`skills/<name>/SKILL.md` via [`/writing-skills`](../writing-skills/SKILL.md)) | `alwaysApply: true` rule or multi-paragraph `agents.kit.md` block | Workflows only apply when triggered; putting them in a rule taxes every unrelated turn. |
-| Language-, framework-, or company-stack invariant (Django `SeparateDatabaseAndState` two-MR column drops, Statsig unit IDs, prod data access) | **Project-local rule** (in the target repo's rules directory; see [`harness-adapter.md`](../magic-mode/references/harness-adapter.md)) | Global `.agents` kit `rules/` | Per ADR-0002 and ADR-0007, the global `.agents` kit carries zero language-specific or company-stack rules. |
+| Language-, framework-, or company-stack invariant (Django `SeparateDatabaseAndState` two-MR column drops, Statsig unit IDs, prod data access) | **Project-local rule** (in the target repo's rules directory; see [`harness-adapter.md`](../magic-mode/references/harness-adapter.md)) | Global `.agents` kit `rules/` | The global `.agents` kit carries zero language-specific or company-stack rules. |
 | Universal, cross-cutting behavioral invariant where the agent doesn't know to load a skill first (looking up docs vs. guessing, $\le 30\text{s}$ sleep cap, `rg` over `grep`) | **Kit rule** (`rules/<name>.md` or 1-line bullet in `agents.kit.md`) | Unenforced chat reminder | Fires on unconscious default behaviors across every task and language. |
 
 ## Where Rules Live & Packaging Contract
@@ -86,7 +86,7 @@ description: >-
 ```
 
 - **Quoting `globs`:** When writing a file-scoped project rule (`alwaysApply: false`), always quote glob strings (`globs: ["**/*.py"]` or `globs: "**/*.json"`). Unquoted `globs: *.py` is invalid YAML (`*` is a YAML alias anchor) and misses subdirectories.
-- **Zero vendor, harness, or forge lock-in (ADR-0001, ADR-0007):** Never put vendor model slugs, harness-specific rule paths, or forge CLI commands inside kit rules. Use the neutral terms in [`harness-adapter.md`](../magic-mode/references/harness-adapter.md).
+- **Zero vendor, harness, or forge lock-in:** Never put vendor model slugs, harness-specific rule paths, or forge CLI commands inside kit rules. Use the neutral terms in [`harness-adapter.md`](../magic-mode/references/harness-adapter.md).
 - **Token budget:**
   - `agents.kit.md` pointer: $\le 25$ words (1 bullet line).
   - Standard operational rule (`rules/sleeps-and-polling.md`, `rules/look-it-up.md`): **$< 150$ words**.
@@ -145,7 +145,7 @@ NO RULE WITHOUT A FAILING BASELINE AND A STRUCTURAL-ENFORCEMENT CHECK FIRST
 
 Follow the five-step RED-GREEN-REFACTOR loop for every new or edited rule:
 
-- [ ] **Step 1 (Gate Placement).** Verify the rule cannot be enforced by a linter/hook/script ([`/correct`](../correct/SKILL.md)), is not a multi-step workflow ([`/writing-skills`](../writing-skills/SKILL.md)), and is placed in the right scope (global kit `rules/` vs. project-local rules per ADR-0002).
+- [ ] **Step 1 (Gate Placement).** Verify the rule cannot be enforced by a linter/hook/script ([`/correct`](../correct/SKILL.md)), is not a multi-step workflow ([`/writing-skills`](../writing-skills/SKILL.md)), and is placed in the right scope (global kit `rules/` vs. project-local rules).
 - [ ] **Step 2 (RED, Baseline Without the Rule).** Run a fresh subagent on a realistic task **without** the rule present, on the `arena cross-judge pool` role, combining 3+ pressures (time deadline, authority override, sunk cost, or "keep it simple").
   - If the subagent already complies without the rule $\to$ **STOP and delete the rule** (it is a no-op).
   - If the subagent violates the invariant $\to$ record the exact choice and rationalizations verbatim.
@@ -201,7 +201,7 @@ When creating files larger than ~300 lines:
 - Authoring a rule without running a RED baseline subagent first (or keeping a rule when the RED baseline already complied without it)
 - Creating a duplicate rule file when an existing file in `rules/` or bullet in `agents.kit.md` already covers the topic, or appending `"Additional Notes"` sections that push a rule over its word budget
 - Putting a multi-step playbook, subagent prompt template, or $>300$-word manual into `rules/` instead of `skills/`
-- Adding language-specific (Python, Django, Rust, TypeScript) or company-stack rules into the global `.agents` kit `rules/` directory (violates ADR-0002 and ADR-0007; place those in the project's own rules directory)
+- Adding language-specific (Python, Django, Rust, TypeScript) or company-stack rules into the global `.agents` kit `rules/` directory (place those in the project's own rules directory)
 - Including subjective exemption clauses (`"unless small"`, `"unless simple"`, `"for quick local debugging if cleaned up later"`, `"when appropriate"`) or pasting real PII / internal secrets into rule examples
 - Adding headings, multi-sentence paragraphs, or non-bullet text to `agents.kit.md`
 - Unsorted frontmatter keys (`description` before `alwaysApply`), unquoted `globs: *.py`, or hardcoded model slugs / harness-specific paths in `rules/*.md`

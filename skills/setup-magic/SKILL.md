@@ -135,7 +135,7 @@ For GitHub, GitLab, or Linear, write `docs/agents/issue-tracker.md` from [`refer
 
 ### Step 7. Check the domain docs and bootstrap gates
 
-Check `CONTEXT.md` and `docs/adr/`. When either is absent, offer once to scaffold a minimal domain glossary and an ADR directory stub. Write only on a yes.
+Check `CONTEXT.md`. When it is absent, offer once to scaffold a minimal domain glossary. Write only on a yes.
 
 On a greenfield repository with no commits or no lint setup, read [`new-repo-setup.md`](../../rules/new-repo-setup.md) and confirm that the matching `init-<lang>-repo` skill ran and its gates pass.
 
