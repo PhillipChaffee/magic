@@ -1,11 +1,13 @@
 ---
-description: Use when writing, editing, debugging, refactoring, reviewing, or shipping code, tests, docs, or config, or when running multi-step engineering workflows. Applies magic's agent style for concise responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for magic, /magic-mode, or any non-trivial engineering task.
+description: magic's agent style for concise responses, deliberate subagents, unslopped prose, simple code, and verified work, run through playbooks. Use for magic, /magic-mode, or requests to work in this style.
 enabled: true
 id: magic-mode
 name: magic-mode
 ---
 
 # Magic mode
+
+This mode is opt-in. Once the user invokes it, work this way for the rest of the session, until the user says to stop. While it is on, a task that is not engineering work goes to its entry-point skill per the table in the **using-magic** skill.
 
 Bundled skills live at `../<name>/SKILL.md` (`skill.md` in a protocol install) from this file, so put this file's absolute path in every `magic-agent` prompt. Read `references/harness-adapter.md` once per session before you follow this skill. It maps the neutral names in magic skills to your harness.
 
