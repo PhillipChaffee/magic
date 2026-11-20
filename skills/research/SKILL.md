@@ -159,6 +159,7 @@ and source lookups and must stop with exact missing evidence rather than gatheri
 - **Cite everything**: `file:line` for code, URLs for web, tool/source name for MCP.
 - **Right-size effort**: prefer the lowest tier that fully answers the question.
 - **File output for Tier 2/3**: the deliverable lands at `docs/research/<topic>.md`
-  so the main flow can consume it; the chat summary points at the file.
+  so the main flow can consume it; the chat summary points at the file. The file
+  is a local working artifact: leave it untracked and never stage, commit, or push it.
 - **Chat output shape**: follow the [reply style](../magic-mode/references/reply-style.md). A Tier 1 answer is a few sentences with citations. A Tier 2 or Tier 3 summary uses sections, tables for comparisons and sources, a Mermaid diagram when it illustrates a flow or architecture, and a closing `## TL;DR`.
 - **Surface gaps**: list what couldn't be confirmed and what would resolve it.
