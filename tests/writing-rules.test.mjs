@@ -66,16 +66,7 @@ test("rules/, agents.kit.md, README.md, and docs/CATALOG.md satisfy the universa
 	}
 });
 
-test("workflow-routing.md, agents.kit.md, and using-magic route PR/MR creation and updates to /clean-code and /make-pr-easy-to-review", () => {
-	const routingRule = fs.readFileSync(path.join(repoDir, "rules/workflow-routing.md"), "utf8");
-	assert.match(routingRule, /\/clean-code/);
-	assert.match(routingRule, /\/make-pr-easy-to-review/);
-	assert.match(routingRule, /pull request or merge request/i);
-	assert.match(
-		routingRule,
-		/subtask that does not open or update a pull request or merge request/i,
-	);
-
+test("agents.kit.md and using-magic route PR/MR creation and updates to /clean-code and /make-pr-easy-to-review", () => {
 	const kitText = fs.readFileSync(path.join(repoDir, "agents.kit.md"), "utf8");
 	assert.match(kitText, /\/clean-code/);
 	assert.match(kitText, /\/make-pr-easy-to-review/);
@@ -87,6 +78,15 @@ test("workflow-routing.md, agents.kit.md, and using-magic route PR/MR creation a
 		usingMagic,
 		/subtask that does not open or update a pull request or merge request/i,
 	);
+});
+
+test("no always-applied rule or home instruction routes every task", () => {
+	for (const entry of fs.readdirSync(path.join(repoDir, "rules"))) {
+		const rule = fs.readFileSync(path.join(repoDir, "rules", entry), "utf8");
+		assert.doesNotMatch(rule, /entry-point skill/i, `rules/${entry} must not route tasks to entry-point skills`);
+	}
+	const kitText = fs.readFileSync(path.join(repoDir, "agents.kit.md"), "utf8");
+	assert.doesNotMatch(kitText, /route every task/i);
 });
 
 test("writing-rules rule_triage flowchart renders cleanly with render-graphs.js", (t) => {

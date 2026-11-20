@@ -82,7 +82,9 @@ test("README.md and .gitignore document magic quote, SVG workflow diagram, secti
 		"### Pi",
 		"### `.agents` Directory (`~/.agents` or `.agents/`)",
 		"<summary><strong><code>.agents</code> directory CLI flags &amp; per-harness behavior</strong></summary>",
-		"You never need to invoke `/using-magic` yourself",
+		"Installing changes nothing until you invoke a skill",
+		"### Opt In to Routing",
+		"MAGIC_ROUTING=always",
 		"## The Basic Workflow",
 		"## Acknowledgments",
 		"docs/CATALOG.md",
@@ -95,7 +97,6 @@ test("README.md and .gitignore document magic quote, SVG workflow diagram, secti
 		"pi install git:github.com/PhillipChaffee/magic",
 		"./scripts/install.sh --target agents",
 		"skills/using-magic/SKILL.md",
-		"rules/workflow-routing.md",
 		"https://github.com/AminBlg/SimpleEnglish",
 		"Amin Boulouma (`@AminBlg`)",
 	]) {
