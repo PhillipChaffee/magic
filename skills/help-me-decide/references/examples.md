@@ -6,8 +6,6 @@ Two abbreviated runs, one per mode. They show the shape of each step, not text t
 
 **Collect.** A feature task ended with eleven open questions. Ids were one word each, such as `tray`, `quit`, `resize`, `sync`.
 
-**Triage.** Three had a platform convention or an answer in the code and were settled without asking. Eight remained.
-
 **Verify.** A read-only subagent ran the app and recorded each flow. Its brief said to leave the repo untouched, record what actually happens, and report any claim that did not reproduce. Recording the app corrected three earlier claims.
 
 | Id | Earlier claim | What the recording showed |
@@ -15,6 +13,8 @@ Two abbreviated runs, one per mode. They show the shape of each step, not text t
 | `quit` | Closing the last window quits the app | The process stays alive in the tray |
 | `resize` | The sidebar keeps its width across restarts | The width resets on every launch |
 | `sync` | Sync starts when the window gains focus | Sync starts 30 s after launch, whatever has focus |
+
+**Triage.** Three had a platform convention or an answer in the code and were settled without asking. Eight remained, the three corrected ones among them.
 
 **Build.** One page with eight cards.
 

@@ -36,9 +36,15 @@ Copy these seven steps into the todo list.
 
 List every open question or finding. Give each a short stable id that survives into the pasted answer. Merge duplicates first. The same problem seen from two places is one item. Its id is the first source id, and the card names the others, as in "F1 (also F6)".
 
-### 2. Triage
+### 2. Verify before asking
 
-Sort once now to see how much there is to check. Sort again after step 3, because verification moves items between piles.
+Establish what is true from the real artifact, not from memory or an earlier report. Expect this step to correct things said earlier. Those corrections go on the page. A new problem found while checking becomes its own item with a new id, sorted like the rest. A small one that an existing decision already covers goes on that card instead, and each option there says whether it fixes it.
+
+**Product mode.** Run the app, read the code, record it. When evidence gathering is more than a few tool calls, give it to a read-only subagent. The brief says three things. Leave the repo untouched. Record what actually happens. If a claim does not reproduce, say so instead of staging it. With no subagent tool, gather the evidence yourself under the same three rules and say so in the handover.
+
+**Findings mode.** Check each finding with a different agent from the one that produced it. If another agent wrote the findings, you can check them. If you wrote them, spawn a subagent. With no subagent tool, check them yourself from the code and say on the page that the check was not independent. Give the checker the code and the claim, not the reviewer's conclusion. Each finding comes back `confirmed`, `adjusted` (true, but the remedy changes) or `rejected`. Reviewers do not build anything, so check every claim that a change is "neutral" or "behaviour-preserving" by running the tests that pin the behaviour.
+
+### 3. Triage
 
 **Product mode.** Remove anything the code answers or a conventional default settles, and say in the handover what you settled. A change to observable behaviour is never yours to settle, a bug fix you found on the way included. If verification shows a question rested on a wrong premise, keep the card when the behaviour is still a real choice. Keep roughly 3 to 9.
 
@@ -53,14 +59,6 @@ Sort once now to see how much there is to check. Sort again after step 3, becaus
 A finding whose problem is real but whose remedy turns out to change behaviour is a card. A finding with no real problem is rejected, whatever its remedy would do.
 
 Aim for at most about ten cards. If more remain, group them by root cause and ask about the group.
-
-### 3. Verify before asking
-
-Establish what is true from the real artifact, not from memory or an earlier report. Expect this step to correct things said earlier. Those corrections go on the page. A new problem found while checking becomes its own item with a new id, sorted like the rest. A small one that an existing decision already covers goes on that card instead, and each option there says whether it fixes it.
-
-**Product mode.** Run the app, read the code, record it. When evidence gathering is more than a few tool calls, give it to a read-only subagent. The brief says three things. Leave the repo untouched. Record what actually happens. If a claim does not reproduce, say so instead of staging it. With no subagent tool, gather the evidence yourself under the same three rules and say so in the handover.
-
-**Findings mode.** Check each finding with a different agent from the one that produced it. If another agent wrote the findings, you can check them. If you wrote them, spawn a subagent. With no subagent tool, check them yourself from the code and say on the page that the check was not independent. Give the checker the code and the claim, not the reviewer's conclusion. Each finding comes back `confirmed`, `adjusted` (true, but the remedy changes) or `rejected`. Reviewers do not build anything, so check every claim that a change is "neutral" or "behaviour-preserving" by running the tests that pin the behaviour.
 
 ### 4. Build one page
 
