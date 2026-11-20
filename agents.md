@@ -23,6 +23,11 @@ this file contains repository-only guidance.
 - In `skills/`, `rules/`, `agents/`, and `agents.kit.md`, use that file's neutral terms. When a change needs a harness-specific mechanism, add a harness adapter row with an equivalent or a stated fallback for every listed harness.
 - Never make a feature, script, test, or eval depend on one harness's CLI, built-in feature, or file layout. Put per-harness code behind an adapter that covers every listed harness.
 
+## Tests
+
+- Never add a test or validator check that asserts on the wording of a Markdown file. A prose change to skills, rules, agents, or docs ships with no new test.
+- Add a test only for executable behavior: run a script, hook, installer, or plugin and assert on what it does.
+
 ## Repository tooling
 
 - Issues: GitHub Issues through `gh`.
