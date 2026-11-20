@@ -89,6 +89,21 @@ test("workflow-routing.md, agents.kit.md, and using-magic route PR/MR creation a
 	);
 });
 
+test("agents.md requires every change to work in each harness the harness adapter lists", () => {
+	const guidance = fs.readFileSync(path.join(repoDir, "agents.md"), "utf8");
+	const start = guidance.indexOf("## Harness neutrality\n");
+	assert.notEqual(start, -1, "agents.md is missing the Harness neutrality section");
+	const next = guidance.indexOf("\n## ", start + 1);
+	const section = guidance.slice(start, next === -1 ? undefined : next);
+
+	assert.match(section, /Keep every change harness-agnostic/);
+	assert.match(section, /Never make a feature, script, test, or eval depend on one harness's/);
+
+	const adapterPath = "skills/magic-mode/references/harness-adapter.md";
+	assert.ok(section.includes(adapterPath), `Harness neutrality must point at ${adapterPath}`);
+	assert.ok(fs.existsSync(path.join(repoDir, adapterPath)), `${adapterPath} must exist`);
+});
+
 test("writing-rules rule_triage flowchart renders cleanly with render-graphs.js", (t) => {
 	const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "writing-rules-graph-"));
 	t.after(() => fs.rmSync(tmpDir, { recursive: true, force: true }));

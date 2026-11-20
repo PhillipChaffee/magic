@@ -17,6 +17,12 @@ this file contains repository-only guidance.
   - Update the rule count in `README.md` and the count and table in `docs/CATALOG.md`.
   - Run `./scripts/validate.sh`, `python3 -m unittest discover -s tests`, and `node --test tests/*.test.mjs`.
 
+## Harness neutrality
+
+- Keep every change harness-agnostic: it must work in each harness that `skills/magic-mode/references/harness-adapter.md` lists, never in one alone.
+- In `skills/`, `rules/`, `agents/`, and `agents.kit.md`, use that file's neutral terms. When a change needs a harness-specific mechanism, add a harness adapter row with an equivalent or a stated fallback for every listed harness.
+- Never make a feature, script, test, or eval depend on one harness's CLI, built-in feature, or file layout. Put per-harness code behind an adapter that covers every listed harness.
+
 ## Repository tooling
 
 - Issues: GitHub Issues through `gh`.
