@@ -64,18 +64,18 @@ Establish what is true from the real artifact, not from memory or an earlier rep
 
 ### 4. Build one page
 
-Start from [`references/page-skeleton.html`](references/page-skeleton.html). Replace its sample content and keep its styles and script. Its opening comment lists what to replace and what to delete. It carries the card, option buttons, code and diff blocks, will-do table, summary box, and copy handler, and it is theme-aware and works at phone width. Publish the page with the harness's page-publishing tool, which the harness adapter names. With none, write one self-contained HTML file and send it to the user. Before you publish, load the tool's own page rules where it has them, and make the page meet them.
+Start from [`references/page-skeleton.html`](references/page-skeleton.html). Replace its sample content and keep its styles and script. Its opening comment lists what to replace and what to delete. It carries the card, option buttons, code and diff blocks, will-do table, summary box, and copy handler, and it is theme-aware and works at phone width. Publish the page with the harness's page-publishing tool, which the [harness adapter](../magic-mode/references/harness-adapter.md) names. With none, write one self-contained HTML file and send it to the user. Before you publish, load the tool's own page rules where it has them, and make the page meet them.
 
 The page has these parts, in this order.
 
 1. One short paragraph. What was verified, and how to use the page.
-2. A card of verified facts, when the decisions depend on them. It also states what you cannot verify in your environment, such as another OS, real hardware, or a logged-in service.
-3. Findings mode only. The will-do table, then "accept all suggestions" and a severity filter.
+2. A card of verified facts, when the decisions depend on them. It also lists what you settled without asking, and states what you cannot verify in your environment, such as another OS, real hardware, or a logged-in service.
+3. Findings mode only. The will-do table with its combined diff collapsed beneath it, then "accept all suggestions" and a severity filter.
 4. One card per decision, most important first.
 5. Findings mode only. The rejected findings, collapsed, each with its reason.
 6. The summary box.
 
-Every card has these slots. Fill each one.
+Every card has these slots. Fill each one that applies.
 
 | Slot | Content |
 | --- | --- |
@@ -84,7 +84,7 @@ Every card has these slots. Fill each one.
 | Found while checking | Present when verification contradicted an earlier claim or exposed something new. In findings mode it also carries the verdict and its reason. |
 | Evidence | See the two lists below |
 | Relationships | Findings mode. "Needs F3 first", "conflicts with F5", "also resolves F8, F12" |
-| Options | Two to four large buttons. Each has a name and one line on what it costs or changes. Exactly one carries the suggestion tag. |
+| Options | Two to four large buttons. Each has a name and one line on what it costs or changes. Exactly one carries the suggestion tag. Keep `:` and `\|` out of option names, because the answer line uses both. |
 | Note | An optional one-line text field |
 
 **Evidence, product mode.**
@@ -132,7 +132,7 @@ F8: (not picked)
 - Picks are kept in `localStorage` inside try/catch, so a reload does not lose them. The page says plainly when saving is unavailable.
 - Copy and paste is the primary path. A shared database behind the page is an optional extra and never the only way back.
 
-Open the rendered page at phone width, pick an option, and press Copy before you hand over. Use a throwaway browser profile so your test picks are not saved for the user, and grant it clipboard permission to see the copy succeed. If you could not, say so in the handover.
+Open the rendered page at phone width, pick an option, and press Copy before you hand over. If you removed the document tags for a publishing tool, test the page inside a one-line wrapper document. Use a throwaway browser profile so your test picks are not saved for the user, and grant it clipboard permission to see the copy succeed. If you could not, say so in the handover.
 
 ### 6. Hand over
 

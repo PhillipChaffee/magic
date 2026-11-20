@@ -51,7 +51,7 @@ shortcuts: Leave it as it is
 | Adjusted | 26 | The problem was real and the remedy changed |
 | Rejected | 6 | Disproved by a guard, a test, or a caller the reviewer did not read |
 
-Three remedies described as "neutral" changed behaviour. Each failed a test that pinned the current behaviour, so each became a card.
+Three remedies described as "neutral" changed behaviour. Each fixed a real problem and failed a test that pinned the current behaviour, so each became a card.
 
 **Triage.** After verification the forty-six sorted into three piles.
 
