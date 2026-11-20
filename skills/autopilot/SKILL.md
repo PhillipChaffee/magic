@@ -1,5 +1,6 @@
 ---
 description: "Use when driving a pull request or merge request to a merge-ready state (resolving merge conflicts, triaging review comments and automated review bot threads, and fixing in-scope CI failures) under a strict diff size budget, or when /autopilot is invoked."
+disable-model-invocation: true
 enabled: true
 id: autopilot
 name: autopilot
