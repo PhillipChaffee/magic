@@ -11,3 +11,5 @@ node_modules/
 !/scripts/install.sh
 !/scripts/validate.sh
 !/scripts/magic-verbatim.txt
+# Research output is a local working artifact, never committed.
+/docs/research/
