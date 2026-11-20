@@ -5,6 +5,7 @@ import {
 	BOOTSTRAP_MARKER,
 	extractAndStripFrontmatter,
 	loadBootstrapContent,
+	routingEnabled,
 } from "../../lib/bootstrap-core.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -95,6 +96,7 @@ export const MagicPlugin = async ({ client }) => {
 		},
 
 		"experimental.chat.messages.transform": async (_input, output) => {
+			if (!routingEnabled()) return;
 			const bootstrap = loadBootstrapContent(magicSkillsDir, V1_MAPPING);
 			if (!bootstrap || !output.messages.length) return;
 			const firstUser = output.messages.find((m) => m.info.role === "user");
@@ -164,6 +166,7 @@ async function setup(ctx) {
 
 	const injectBootstrap = async (event) => {
 		try {
+			if (!routingEnabled()) return;
 			const bootstrap = loadBootstrapContent(magicSkillsDir, V2_MAPPING);
 			if (!bootstrap || !event.messages || !event.messages.length) return;
 			const firstUser = event.messages.find((m) => m.role === "user");
