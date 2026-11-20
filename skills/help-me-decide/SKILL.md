@@ -64,7 +64,7 @@ Establish what is true from the real artifact, not from memory or an earlier rep
 
 ### 4. Build one page
 
-Start from [`references/page-skeleton.html`](references/page-skeleton.html). Replace its sample content and keep its styles and script. Its opening comment lists what to replace and what to delete. It carries the card, option buttons, code and diff blocks, will-do table, summary box, and copy handler, and it is theme-aware and works at phone width. Publish the page as an Artifact where the harness has that tool. Otherwise write one self-contained HTML file and send it to the user. Before you publish, load the harness's own page rules where it has them, and make the page meet them.
+Start from [`references/page-skeleton.html`](references/page-skeleton.html). Replace its sample content and keep its styles and script. Its opening comment lists what to replace and what to delete. It carries the card, option buttons, code and diff blocks, will-do table, summary box, and copy handler, and it is theme-aware and works at phone width. Publish the page with the harness's page-publishing tool, which the harness adapter names. With none, write one self-contained HTML file and send it to the user. Before you publish, load the tool's own page rules where it has them, and make the page meet them.
 
 The page has these parts, in this order.
 

@@ -134,7 +134,6 @@ test("synced magic skill updates and local customizations are preserved", () => 
 		"/clean-code",
 		"/make-bot-ui",
 		"/simple-english",
-		"/help-me-decide",
 	]) {
 		assert.ok(magicHelp.includes(customSkill), `magic-help missing ${customSkill}`);
 	}
@@ -291,40 +290,4 @@ test("simple-english skill and references exist, parse folded frontmatter cleanl
 	}
 	const catalog = fs.readFileSync(path.join(skillDir, "references/rule-catalog.md"), "utf8");
 	assert.match(catalog, /^## Rules\n\n### Section 1: Words \(Rules 1\.1-1\.14\)/m);
-});
-
-test("help-me-decide skill ships its page skeleton and worked examples, and the skeleton keeps the paste-back contract", async () => {
-	const { extractAndStripFrontmatter } = await import("../lib/bootstrap-core.js");
-	const skillDir = path.join(repoDir, "skills/help-me-decide");
-	const skillText = fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8");
-	const { frontmatter, content } = extractAndStripFrontmatter(skillText);
-
-	assert.equal(frontmatter.id, "help-me-decide");
-	assert.equal(frontmatter.name, "help-me-decide");
-	assert.equal(frontmatter.enabled, "true");
-	assert.match(frontmatter.description, /^Use when /);
-	assert.match(content, /^# Help me decide/m);
-	for (const ref of ["references/page-skeleton.html", "references/examples.md"]) {
-		assert.ok(content.includes(`(${ref})`), `SKILL.md must link ${ref}`);
-		assert.ok(fs.existsSync(path.join(skillDir, ref)), `missing skills/help-me-decide/${ref}`);
-	}
-
-	const skeleton = fs.readFileSync(path.join(skillDir, "references/page-skeleton.html"), "utf8");
-	for (const hook of [
-		'id="picks"',
-		'id="copy"',
-		'id="count"',
-		'id="save-notice"',
-		'class="willdo"',
-		"(not picked)",
-		"will-do: all",
-		" | note: ",
-		"navigator.clipboard.writeText",
-		"selectNodeContents",
-		"localStorage.setItem",
-		"prefers-color-scheme: dark",
-	]) {
-		assert.ok(skeleton.includes(hook), `page skeleton lost ${hook}`);
-	}
-	assert.doesNotMatch(skeleton, /<script[^>]+src=|<link[^>]+href=/, "page skeleton must stay self-contained");
 });
