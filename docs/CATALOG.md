@@ -92,7 +92,7 @@ Complete reference of the **23 execution playbooks**, **76 active skills** (**51
 
 ### Skills That Load Only When You Ask
 
-These skills set `disable-model-invocation: true`. Each one loads when you type its slash command or when `/magic-mode` reads it for a playbook step. A description match never loads it.
+Each of these skills loads when you type its command or when `/magic-mode` reads it for a playbook step. A description match never loads it. The [harness adapter](../skills/magic-mode/references/harness-adapter.md) names the mechanism on each harness.
 
 `/arena`, `/autopilot`, `/correct`, `/create-formal-verification-skill`, `/create-verification-skill`, `/figure-it-out`, `/interrogate`, `/ketchup-video`, `/maintain-formal-verification-skill`, `/maintain-verification-skill`, `/make-bot-ui`, `/principle-explain-the-number`, `/reflect`, `/statechart`, `/swarm`, `/tdd`, `/thermo-nuclear-code-quality-review`
 
