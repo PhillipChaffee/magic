@@ -57,7 +57,7 @@ Whether `/magic-mode` stays on depends on how the user starts it:
 - Enter on `/magic-mode` attaches the skill to one message. It fades as the chat moves on.
 - Keeping the skill attached for the whole session (the harness adapter names how) keeps it on. It stays in context every turn until the user exits the mode, and it stays out of casual turns.
 - Elsewhere, start each new task with `/magic-mode`.
-- `MAGIC_ROUTING=always` in the harness environment turns routing on for every session on a plugin install. The [README](../../README.md) has the steps.
+- Turning routing on for every session (the harness adapter names how) loads `/using-magic` at session start.
 
 Link the [harness adapter](../magic-mode/references/harness-adapter.md) when this comes up. Mid-chat, "new task" makes the mode match a fresh playbook. `/magic-mode` already uses `magic-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn it as a `magic-agent` subagent (defined in [`agents/magic-agent/agent.md`](../../agents/magic-agent/agent.md); when the harness has no named agent types, a general-purpose subagent with that definition inlined).
 

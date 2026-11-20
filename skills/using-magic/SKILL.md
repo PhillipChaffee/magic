@@ -1,5 +1,5 @@
 ---
-description: Use when the user asks to turn on magic routing, runs /using-magic, or set MAGIC_ROUTING=always. Routes each task to its magic entry-point skill for the rest of the session.
+description: Use when the user asks to turn on magic routing, runs /using-magic, or turned routing on for every session. Routes each task to its magic entry-point skill for the rest of the session.
 enabled: true
 id: using-magic
 name: using-magic
@@ -7,7 +7,7 @@ name: using-magic
 
 # Using Magic
 
-Routing is opt-in. It is on when the user ran `/magic-mode` or `/using-magic` in this session, or set `MAGIC_ROUTING=always` so that this skill loads at session start. When routing is off, use a magic skill only when the user names it or it clearly fits the request.
+Routing is opt-in. It is on when the user ran `/magic-mode` or `/using-magic` in this session, or turned routing on for every session (the [harness adapter](../magic-mode/references/harness-adapter.md) names how). When routing is off, use a magic skill only when the user names it or it clearly fits the request.
 
 ## Entry-Point Routing
 
