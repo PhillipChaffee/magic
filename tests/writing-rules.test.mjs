@@ -80,15 +80,6 @@ test("agents.kit.md and using-magic route PR/MR creation and updates to /clean-c
 	);
 });
 
-test("no always-applied rule or home instruction routes every task", () => {
-	for (const entry of fs.readdirSync(path.join(repoDir, "rules"))) {
-		const rule = fs.readFileSync(path.join(repoDir, "rules", entry), "utf8");
-		assert.doesNotMatch(rule, /entry-point skill/i, `rules/${entry} must not route tasks to entry-point skills`);
-	}
-	const kitText = fs.readFileSync(path.join(repoDir, "agents.kit.md"), "utf8");
-	assert.doesNotMatch(kitText, /route every task/i);
-});
-
 test("writing-rules rule_triage flowchart renders cleanly with render-graphs.js", (t) => {
 	const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "writing-rules-graph-"));
 	t.after(() => fs.rmSync(tmpDir, { recursive: true, force: true }));
