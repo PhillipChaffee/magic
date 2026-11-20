@@ -66,3 +66,11 @@ test("subagent templates scale their structure to the question", () => {
 	assert.match(explainer, /Skip the diagram when a sentence covers the flow/);
 	assert.match(read("skills/why/references/synthesizer-prompt.md"), /Drop a section that has nothing to say/);
 });
+
+test("magic-mode scales its defaults and playbooks to the size of the task", () => {
+	const magicMode = read("skills/magic-mode/SKILL.md");
+	assert.match(magicMode, /^## Defaults$/m);
+	assert.doesNotMatch(magicMode, /^## Non-negotiables$/m);
+	assert.match(magicMode, /needs no playbook, todo list, or subagent/);
+	assert.match(magicMode, /For nontrivial work, open a todolist/);
+});
