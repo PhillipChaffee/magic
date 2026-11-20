@@ -4,17 +4,17 @@ import path from "node:path";
 import test from "node:test";
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
+const read = (rel) => fs.readFileSync(path.join(repoRoot, rel), "utf8");
 
-const OUTPUT_FORMAT_FILES = [
+const REPLY_STYLE = "skills/magic-mode/references/reply-style.md";
+
+const SKILLS_USING_REPLY_STYLE = [
 	"skills/magic-mode/SKILL.md",
 	"skills/how/SKILL.md",
-	"skills/how/references/explainer-prompt.md",
 	"skills/why/SKILL.md",
-	"skills/why/references/synthesizer-prompt.md",
 	"skills/teach/SKILL.md",
 	"skills/interrogate/SKILL.md",
 	"skills/blast-radius/SKILL.md",
-	"skills/research-summary/SKILL.md",
 	"skills/research/SKILL.md",
 	"skills/recall/SKILL.md",
 	"skills/benchmark-checklist/SKILL.md",
@@ -28,39 +28,41 @@ const OUTPUT_FORMAT_FILES = [
 	"skills/tdd/SKILL.md",
 	"skills/clean-code/SKILL.md",
 	"skills/writing-rules/SKILL.md",
+];
+
+const SUBAGENT_TEMPLATES = [
+	"skills/how/references/explainer-prompt.md",
+	"skills/why/references/synthesizer-prompt.md",
 	"agents/research-synthesizer/agent.md",
 ];
 
-test("output-formatting skills enforce Variant C (1-2 sentence prose cap, section-framed tables/diagrams, and plain bottom ## TL;DR)", () => {
-	for (const rel of OUTPUT_FORMAT_FILES) {
-		const full = path.join(repoRoot, rel);
-		assert.ok(fs.existsSync(full), `missing ${rel}`);
-		const content = fs.readFileSync(full, "utf8");
-		assert.match(
-			content,
-			/1-2 sentences?|One or two (?:plain )?sentences/i,
-			`${rel} must enforce the 1-2 sentence prose block rule`,
-		);
-		assert.match(
-			content,
-			/###? TL;DR/,
-			`${rel} must require a bottom ## TL;DR or ### TL;DR section`,
-		);
-		assert.match(
-			content,
-			/table/i,
-			`${rel} must reference Markdown tables for structured output`,
-		);
+const FIXED_FORMAT =
+	/at most 1-2 sentences|1-2 sentences? max|1-2 sentences per block|Never write a paragraph longer|End every finished turn|End the finished turn|Required at the bottom/i;
+
+test("the reply style is one reference that adapts to the request", () => {
+	const style = read(REPLY_STYLE);
+	assert.match(style, /A format the user asks for always wins/);
+	assert.match(style, /No headings, no table, no TL;DR/);
+	assert.match(style, /Close with `## TL;DR` only when the reply is long/);
+	assert.match(style, /Use a table for items that share attributes/);
+	assert.match(style, /Skip it when a sentence covers the flow/);
+	assert.match(style, /The shape can change\. The content cannot\./);
+});
+
+test("skills point at the reply style and fix no format of their own", () => {
+	for (const rel of SKILLS_USING_REPLY_STYLE) {
+		const content = read(rel);
+		assert.ok(content.includes("references/reply-style.md"), `${rel} must point at the reply style`);
+		assert.doesNotMatch(content, FIXED_FORMAT, `${rel} must not fix a reply format`);
 	}
 });
 
-test("how explainer-prompt enforces Variant C section framing, diagrams, and bottom ### TL;DR", () => {
-	const explainer = fs.readFileSync(
-		path.join(repoRoot, "skills/how/references/explainer-prompt.md"),
-		"utf8",
-	);
-	assert.doesNotMatch(explainer, /1-2 paragraphs/i);
-	assert.doesNotMatch(explainer, /If prose covers the flow, skip the diagram/i);
-	assert.match(explainer, /### TL;DR/);
-	assert.match(explainer, /1-sentence framing line/);
+test("subagent templates scale their structure to the question", () => {
+	for (const rel of SUBAGENT_TEMPLATES) {
+		assert.doesNotMatch(read(rel), FIXED_FORMAT, `${rel} must not fix a reply format`);
+	}
+	const explainer = read("skills/how/references/explainer-prompt.md");
+	assert.match(explainer, /Drop a section that has nothing to say/);
+	assert.match(explainer, /Skip the diagram when a sentence covers the flow/);
+	assert.match(read("skills/why/references/synthesizer-prompt.md"), /Drop a section that has nothing to say/);
 });

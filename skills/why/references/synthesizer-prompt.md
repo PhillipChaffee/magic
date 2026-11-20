@@ -46,7 +46,7 @@ You MUST follow `references/epistemics.md`. Read it in full before writing. The 
 
 ## Output Format
 
-Write for the user in this exact structure, keeping every prose block to **at most 1-2 sentences**, opening each section with a 1-sentence framing line, and using bullets, tables, and visualizations for all detail:
+Write for the user in this structure. Drop a section that has nothing to say. Keep prose short, open each section with a framing sentence, and put detail in bullets, tables, and visualizations where they carry it better than sentences:
 
 ---
 
@@ -99,7 +99,7 @@ Open with 1 sentence on search coverage, then provide a Markdown table (`| Sourc
 
 ### TL;DR
 
-Required at the bottom of the finished turn: 1-2 plain sentences stating the root motivation, overall confidence, and what remains inferred or unknown.
+For a long answer, close with 1-2 plain sentences stating the root motivation, overall confidence, and what remains inferred or unknown. Omit this section when the answer is short enough to read whole.
 
 ---
 

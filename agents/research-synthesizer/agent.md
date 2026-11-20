@@ -42,7 +42,7 @@ synthesis, not fresh investigation.
 
 ## Output format
 
-Default to this structure; adapt section names to the request. Omit empty sections. Keep every prose block to **at most 1-2 sentences**, open each section with a 1-sentence framing line, and use bullets, Markdown tables, and Mermaid diagrams for all supporting detail.
+Default to this structure; adapt section names to the request. Omit empty sections. Keep prose short, open each section with a framing sentence, and put supporting detail in bullets, Markdown tables, and Mermaid diagrams where they carry it better than sentences. A short summary needs no `## TL;DR`.
 
 ```markdown
 <1-2 sentence opening framing what was investigated and the primary takeaway.>

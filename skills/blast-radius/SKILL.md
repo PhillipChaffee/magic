@@ -40,14 +40,14 @@ Step 4 is usually one small script that imports the same library the app ships a
 
 ## What to hand back
 
-Keep every prose block to **at most 1-2 sentences**, open each section with a 1-sentence framing line, and use bullets, Markdown tables, and a Mermaid diagram when the change crosses multiple callers, services, or schemas:
+Hand back these parts, shaped per the [reply style](../magic-mode/references/reply-style.md):
 
 - **What it does.** 1-2 sentences on what changed, plus bullets for non-obvious behavior changes. Include a compact Mermaid dependency/propagation diagram when 3+ hops or boundaries are involved.
 - **The one fact it's safe because of.** State it in 1-2 sentences, name the verification level (1 to 5), and show the runnable proof output. If you couldn't prove it, write `unproven`.
-- **Risks & Cleared Surfaces (Table).** Open with 1 sentence and present a Markdown table (`| Surface / Caller | File:Line | Status (Risk / Cleared) | Likelihood & Impact | Proof / Check |`) covering every confirmed risk and cleared path.
+- **Risks and cleared surfaces.** Every confirmed risk and every cleared path, each with its `file:line`, how likely and how bad, and the proof or check. Use a Markdown table (`| Surface / Caller | File:Line | Status (Risk / Cleared) | Likelihood & Impact | Proof / Check |`) when there are several.
 - **Before you merge.** Bullet list of the cheapest test or repro that catches the real bug, including the script you wrote.
-- **TL;DR.** Required at the bottom of the turn: a `## TL;DR` section with 1-2 plain sentences stating whether the safety fact is proven, any remaining risk, and merge readiness.
+- **Verdict.** Whether the safety fact is proven, any remaining risk, and merge readiness. Lead with it, or close with it as a `## TL;DR` when the writeup is long.
 
 Write it through `unslop`, cite real code, and strip anything private before it goes anywhere public.
 
-**Reply:** the writeup above (1-2 sentence max prose blocks, Risk/Cleared table, propagation visual when multi-hop, and bottom `## TL;DR`), with the one safety fact either proven or marked unproven.
+**Reply:** the writeup above, with the one safety fact either proven or marked unproven.

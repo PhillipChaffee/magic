@@ -151,19 +151,19 @@ If **two consecutive passes** hit the **same blocker** with no viable minimal in
 
 Exit only when a fresh live status read confirms the PR is **mergeable + required CI green + all comments triaged** (or when paused on an explicit `pause-plan`, over-budget blocker, or 2-pass anti-stall).
 
-Every autopilot exit report **must** keep prose blocks to at most 1-2 sentences, use Markdown tables and bullets, and include this exact summary structure ending with a bottom `## TL;DR`:
+Every autopilot exit report **must** include these parts, shaped per the [reply style](../magic-mode/references/reply-style.md):
 
-1. **Diff Size & Budget Accounting (Table):**
+1. **Diff Size & Budget Accounting:**
    - `baseline_changed_lines` (`+baseline_ins / -baseline_del`) $\to$ `final_changed_lines` (`+final_ins / -final_del`)
    - `net_code_growth`: `(final_ins - final_del) - (baseline_ins - baseline_del)`
    - `budget_used`: `<used> / <growth_budget>` (`maximum_changed_lines = <max>`)
-2. **Triaged Items Breakdown (Table + Bullets):**
+2. **Triaged Items Breakdown:**
    - `fix-now` items implemented (with commit SHA and minimal change summary)
    - `reject` / `defer` / `nit-skip` items (with concrete reasons and named follow-ups for `defer`)
 3. **Paused Plan Asks / Escalations:**
    - Any `pause-plan`, over-budget, or 2-pass anti-stall blockers awaiting user decision.
-4. **`## TL;DR` at the bottom:**
-   - 1-2 plain sentences stating PR mergeability, CI status, budget used, and any action waiting on the user.
+4. **Status:**
+   - PR mergeability, CI status, budget used, and any action waiting on the user. Lead with it, or close with it as a `## TL;DR` when the report is long.
 
 ## Common Mistakes & Rationalizations
 

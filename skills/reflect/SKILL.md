@@ -58,10 +58,10 @@ If your environment ships a SKILL.md validator, run it on every touched skill be
 
 ## 6. Summarize for the user
 
-Keep prose blocks to at most 1-2 sentences, present Accepted / Backlog / Dropped items as a Markdown table or concise bullets, and end with a 1-2 sentence `## TL;DR` section at the bottom:
+Short list, no preamble, shaped per the [reply style](../magic-mode/references/reply-style.md):
 
 - Edits applied: `<skill path>`. What changed, one line each.
 - New skills created: `<skill path>`. One line each (rare).
 - Backlog filed to the devex tracker: `<issue title>` (`<tags>`). One line each.
 - Dropped: one line per rejected finding + reason from the synthesizer.
-- `## TL;DR`: 1-2 plain sentences stating what landed or awaits approval.
+- What landed and what awaits approval, in a sentence or two.

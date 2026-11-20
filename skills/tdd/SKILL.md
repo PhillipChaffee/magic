@@ -37,9 +37,9 @@ Prefer no new test over a bad test. A bad test is one that mostly tests mocks, e
 
 ## Final Response
 
-Keep every prose block to at most 1-2 sentences, report the evidence in a Markdown table (`| Stage | Command / Test | Result & Output |`) and concise bullets, and end with a 1-2 sentence `## TL;DR` section at the bottom:
+Report the evidence, not just the outcome, shaped per the [reply style](../magic-mode/references/reply-style.md):
 
 - Name the failing-before test or executable check and the failure it produced.
 - Name the passing-after test run and any nearby validation performed.
 - If failing-before evidence could not be demonstrated, state why and describe the closest regression check used instead.
-- Close with `## TL;DR` (1-2 plain sentences stating the root cause, fix, and passing regression check).
+- State the root cause, the fix, and the passing regression check.
