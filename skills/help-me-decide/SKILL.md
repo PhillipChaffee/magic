@@ -161,7 +161,7 @@ Then stop. Change nothing until the picks come back.
 - Never put a question on the page that you could answer yourself.
 - Every option says what it costs. No option is described only by its upside.
 - Evidence is real or labelled as a drawing. Never present a mock-up as a screenshot, and never stage a recording to match the expected story.
-- A proposed code change is shown as a diff, never only described.
+- In findings mode, a proposed code change is shown as a diff, never only described. In product mode a diff is optional. If you show one that you did not run, label it as a sketch.
 - If a choice needs an exception to a project rule (a lint, a gate, a dependency policy), say so on the option itself, not afterwards.
 - The suggestion tag is a recommendation, not a default. Nothing is acted on until the user returns their picks. The will-do table is the one exception, and it is acted on only after the user returns the `will-do:` line.
 - Rejected findings stay visible, collapsed, with their reason.
