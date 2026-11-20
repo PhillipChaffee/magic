@@ -166,6 +166,8 @@ Prioritize findings in this order:
 Do not flood the review with low-value nits if there are larger structural issues.
 Prefer a smaller number of high-conviction comments over a long list of cosmetic notes.
 
+When the review ends with three or more findings that need the user's judgment, hand them to the **help-me-decide** skill instead of listing them in chat.
+
 ## Approval Bar
 
 Do not approve merely because behavior seems correct.

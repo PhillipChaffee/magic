@@ -158,6 +158,14 @@ That's the whole prompt. [`/bro`](../../skills/bro/SKILL.md) restates the last m
 
 To watch the catch-up instead, run [`/ketchup-video`](../../skills/ketchup-video/SKILL.md). It shows what happened in a short subtitled video of slides, and lists the calls waiting on you as text under it.
 
+## Decide several things at once
+
+```text
+/help-me-decide walk me through the findings
+```
+
+[`/help-me-decide`](../../skills/help-me-decide/SKILL.md) checks each open question or review finding against the real code or app, then builds one page with the evidence and an option for each. Pick, press Copy choices, and paste the text back. Nothing changes until you paste.
+
 ## The pitfalls
 
 - **Enumerating skills in the prompt.** "use /how then /architect then /arena" reorders steps the playbook already sequences. State the goal and constraints. Name a skill only to override a default.
