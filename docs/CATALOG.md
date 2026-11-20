@@ -1,6 +1,6 @@
 # Catalog Reference
 
-Complete reference of the **23 execution playbooks**, **76 active skills** (**51 workflow/domain skills** + **25 engineering principles**), **7 specialist sub-agents**, and **5 operational rules** shipped in `magic`.
+Complete reference of the **23 execution playbooks**, **77 active skills** (**52 workflow/domain skills** + **25 engineering principles**), **7 specialist sub-agents**, and **5 operational rules** shipped in `magic`.
 
 ---
 
@@ -34,7 +34,7 @@ Complete reference of the **23 execution playbooks**, **76 active skills** (**51
 
 ---
 
-## 51 Situational, PR, Research, Formal Verification, Planning & Authoring Skills
+## 52 Situational, PR, Research, Formal Verification, Planning & Authoring Skills
 
 | Group | Skill | Use It When |
 | --- | --- | --- |
@@ -55,6 +55,7 @@ Complete reference of the **23 execution playbooks**, **76 active skills** (**51
 | **Context & Catch-Up** | [`/recall`](../skills/recall/SKILL.md) | Rebuilding recent context on a topic when starting or resuming work |
 | **Context & Catch-Up** | [`/ketchup`](../skills/ketchup/SKILL.md) | Catching up on what changed in the current chat, with every decision waiting on you |
 | **Context & Catch-Up** | [`/ketchup-video`](../skills/ketchup-video/SKILL.md) | Rendering `/ketchup` as a short subtitled video of slides |
+| **Context & Catch-Up** | [`/help-me-decide`](../skills/help-me-decide/SKILL.md) | Deciding three or more open questions or review findings from one evidence page, then pasting your picks back |
 | **Design & Parallelism** | [`/architect`](../skills/architect/SKILL.md) | Settling types and module boundaries before writing cross-boundary code |
 | **Design & Parallelism** | [`/arena`](../skills/arena/SKILL.md) | Running `N` parallel attempts at the same brief and grafting the best parts |
 | **Design & Parallelism** | [`/swarm`](../skills/swarm/SKILL.md) | Dispatching `N` parallel workers across slices or races into one report |

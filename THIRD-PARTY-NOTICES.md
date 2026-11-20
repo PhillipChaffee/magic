@@ -102,8 +102,8 @@ SOFTWARE.
 
 ## cursor-team-kit
 
-`skills/thermo-nuclear-code-quality-review/` is copied without content changes
-and `skills/make-pr-easy-to-review/` is adapted (adding `## Why` and
+`skills/thermo-nuclear-code-quality-review/` is adapted (adding a hand-off to
+`help-me-decide`) and `skills/make-pr-easy-to-review/` is adapted (adding `## Why` and
 forge-agnostic guidance) from `cursor-team-kit` in
 [cursor/plugins](https://github.com/cursor/plugins), commit
 `ae5650febf4320793844c12c4adaa937f417f8da`.
