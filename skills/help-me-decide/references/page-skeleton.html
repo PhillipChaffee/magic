@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decisions to make</title>
+<!--
+  Decision page skeleton. Copy this file, then:
+    1. Replace every ADAPT string: the title, main[data-page-key], and the
+       sample content between the ADAPT markers.
+    2. Delete the sample card and the blocks the mode does not use. Product
+       mode has no will-do table, tools row, or rejected list.
+    3. Add styles for mock-ups to the stylesheet. Prefix your class names.
+    4. For a single file, inline every image as a data: URI and keep the
+       file small enough to open on a phone.
+    5. If the harness's publishing tool wraps the page in its own document,
+       delete the doctype, html, head, and body tags. Keep the title, meta,
+       style, content, and script, and follow that tool's page rules.
+    6. Delete this comment.
+  Keep the styles and the script. The script reads the markup below.
+
+  Markup the script reads
+    main[data-mode]          "product" or "findings". Product mode hides .findings-only.
+    main[data-page-key]      Unique per page. Namespaces the saved picks.
+    .card[data-id]           One decision. The id is the left side of its answer line.
+                             A merged item uses its first source id. Show the others
+                             in the card's id line, as in "F1 (also F6)".
+      [data-severity]        high | medium | low (findings mode, drives the filter).
+      [data-needs="F3 F9"]   Ids that must be accepted first.
+      [data-conflicts="F5"]  Ids that cannot be accepted together with this one.
+    .option[data-option]     The option name, exactly as it appears in the answer line.
+      [data-suggested]       Exactly one per card.
+      [data-accepts]         The option changes files, in any version. Leave it off
+                             Reject, Defer, and "leave it" (used for needs/conflicts).
+    .willdo tr[data-id]      One will-do row with an input.object checkbox.
+    pre.diff                 Plain escaped text. Lines starting + or - get coloured.
+
+  Escape every piece of code and every user-visible string you insert:
+  & becomes &amp;  < becomes &lt;  > becomes &gt;
+-->
+<style>
+:root {
+  --bg: #f6f5f1; --surface: #ffffff; --ink: #1d1c1a; --muted: #65625c; --line: #dcd9d1;
+  --accent: #1f5fbf; --accent-ink: #ffffff; --pick-bg: #e6eefb;
+  --add-bg: #e3f4e6; --add-ink: #12521f; --del-bg: #fbe6e4; --del-ink: #8a1c13;
+  --warn-bg: #fff3d6; --warn-ink: #6b4a00; --code-bg: #f0eee8;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161614; --surface: #20201d; --ink: #ecebe6; --muted: #a3a097; --line: #3a3934;
+    --accent: #8ab4ff; --accent-ink: #0d1b33; --pick-bg: #1d2c47;
+    --add-bg: #173221; --add-ink: #a6e3b2; --del-bg: #3a1c1a; --del-ink: #f3aaa3;
+    --warn-bg: #3b3016; --warn-ink: #f2d58a; --code-bg: #2a2925;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161614; --surface: #20201d; --ink: #ecebe6; --muted: #a3a097; --line: #3a3934;
+  --accent: #8ab4ff; --accent-ink: #0d1b33; --pick-bg: #1d2c47;
+  --add-bg: #173221; --add-ink: #a6e3b2; --del-bg: #3a1c1a; --del-ink: #f3aaa3;
+  --warn-bg: #3b3016; --warn-ink: #f2d58a; --code-bg: #2a2925;
+    color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--sans); overflow-x: hidden; }
+main { max-width: 760px; margin: 0 auto; padding-block: 16px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 1.5rem; line-height: 1.25; margin: 8px 0; }
+h2 { font-size: 1.15rem; line-height: 1.3; margin: 0 0 8px; }
+h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 16px 0 6px; }
+p { margin: 0 0 10px; }
+a { color: var(--accent); }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; display: flex; gap: 12px; align-items: center; justify-content: space-between;
+  padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); border-bottom: 1px solid var(--line); font-size: 0.9rem; }
+.bar strong { font-variant-numeric: tabular-nums; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
+.card, .facts, .summary, .pile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 16px 0; }
+.card.picked { border-color: var(--accent); }
+.id { font: 0.8rem var(--mono); color: var(--muted); }
+.chip { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 1px 7px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); vertical-align: middle; }
+.chip.suggested { border-color: var(--accent); color: var(--accent); }
+.chip.rule, .chip.high { border-color: var(--del-ink); color: var(--del-ink); }
+.found { background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 8px 10px; margin: 10px 0; }
+figure { margin: 10px 0; }
+figure img, figure video { max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; display: block; }
+.shot { position: relative; display: inline-block; max-width: 100%; }
+.shot .click { position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 3px solid var(--del-ink); border-radius: 50%; }
+figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+.mock { border: 2px dashed var(--line); border-radius: 8px; padding: 12px; }
+.mock .new { outline: 2px solid var(--accent); outline-offset: 2px; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); }
+.timeline li { position: relative; padding: 0 0 10px 10px; font-size: 0.9rem; }
+.timeline li::before { content: ""; position: absolute; left: -20px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.timeline time { font: 0.8rem var(--mono); color: var(--muted); margin-right: 6px; }
+.path { font: 0.78rem var(--mono); color: var(--muted); margin: 10px 0 0; overflow-wrap: anywhere; }
+pre { font: 0.82rem/1.45 var(--mono); background: var(--code-bg); border-radius: 6px; padding: 10px; margin: 4px 0 10px;
+  max-width: 100%; overflow-x: auto; white-space: pre; tab-size: 2; }
+pre.diff .add { background: var(--add-bg); color: var(--add-ink); display: block; }
+pre.diff .del { background: var(--del-bg); color: var(--del-ink); display: block; }
+pre.diff span { display: block; min-width: max-content; }
+code { font: 0.9em var(--mono); overflow-wrap: anywhere; }
+dl.size { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0 0 10px; font-size: 0.9rem; }
+dl.size dt { color: var(--muted); }
+dl.size dd { margin: 0; }
+.options { display: grid; gap: 8px; margin: 12px 0 8px; }
+.option { display: block; width: 100%; text-align: left; min-height: 56px; padding: 10px 12px; font: inherit; color: var(--ink);
+  background: var(--surface); border: 2px solid var(--line); border-radius: 8px; cursor: pointer; }
+.option[aria-pressed="true"] { border-color: var(--accent); background: var(--pick-bg); }
+.option:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.option b { display: block; }
+.option small { display: block; color: var(--muted); font-size: 0.85rem; }
+.pick-note { width: 100%; font: inherit; padding: 8px 10px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.btn { font: inherit; font-weight: 600; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.quiet { background: transparent; color: var(--accent); }
+select { font: inherit; padding: 8px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.scroll { max-width: 100%; overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+td.obj { white-space: nowrap; }
+details summary { cursor: pointer; font-weight: 600; }
+.warnings { margin: 0 0 10px; padding: 0; list-style: none; }
+.warnings li { background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 6px 10px; margin: 0 0 6px; }
+#status, #save-notice { font-size: 0.9rem; color: var(--muted); margin: 8px 0 0; }
+[hidden] { display: none !important; }
+main[data-mode="product"] .findings-only { display: none; }
+</style>
+</head>
+<body>
+
+<div class="bar" role="status">
+  <span><strong id="count">0 of 0</strong> picked</span>
+  <a href="#answers">Review and copy</a>
+</div>
+
+<main data-mode="findings" data-page-key="ADAPT-unique-key">
+<!-- ADAPT: start of page content -->
+
+<h1>ADAPT: what these decisions are about</h1>
+<p>ADAPT: one short paragraph. What was verified and how. Then: pick one option per card, press Copy choices at the bottom, paste the text into the chat. Nothing is changed until you paste.</p>
+
+<section class="facts">
+  <h2>Verified before asking</h2>
+  <ul>
+    <li>ADAPT: a fact the decisions depend on, and how it was checked (ran it, reproduced it, or read it at <code>path:line</code>).</li>
+    <li>Could not check here: ADAPT (another OS, real hardware, a logged-in service).</li>
+  </ul>
+</section>
+
+<section class="pile findings-only">
+  <h2>Will do unless you object</h2>
+  <p>Confirmed, mechanical, no behaviour change, no rule exception. Tick a row to take it out.</p>
+  <div class="scroll">
+    <table class="willdo">
+      <thead><tr><th>Id</th><th>Change</th><th>Object</th></tr></thead>
+      <tbody>
+        <tr data-id="F2" data-severity="low">
+          <td class="id">F2</td><td>Delete unused import<br><code>src/pricing.js:1</code></td>
+          <td class="obj"><label><input type="checkbox" class="object"> object</label></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="tools findings-only">
+  <button type="button" class="btn quiet" id="accept-all">Pick the suggestion on every unpicked card</button>
+  <label>Show <select id="severity">
+    <option value="">all severities</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option>
+  </select></label>
+  <span id="hidden-count" role="status"></span>
+</div>
+
+<!-- One card per decision, most important first. This one is a findings-mode card. Delete it in product mode. -->
+<section class="card" data-id="F4" data-severity="medium" data-needs="" data-conflicts="">
+  <p class="id">F4 (also F9) <span class="chip">medium</span> <span class="chip">adjusted</span></p>
+  <h2>ADAPT: the decision as a question, in the user's words?</h2>
+  <p>ADAPT: two or three plain sentences on what is true today.</p>
+  <p class="found"><b>Found while checking.</b> ADAPT: what verification contradicted or exposed. In findings mode add the verdict (confirmed, adjusted, rejected) and its reason.</p>
+
+  <h3>Today</h3>
+  <p class="path">src/pricing.js:6-10</p>
+<pre> 6  export function parseQty(raw) {
+ 7    let qty = parseInt(raw, 10);
+ 8    if (Number.isNaN(qty) || qty &lt; 0) return 0;
+ 9    return qty;
+10  }</pre>
+
+  <h3>Proposed change</h3>
+<pre class="diff">@@ src/pricing.js:7 @@
+-  let qty = parseInt(raw, 10);
++  let qty = Number(raw);</pre>
+
+  <h3>Size and guards</h3>
+  <dl class="size">
+    <dt>Touches</dt><dd>1 file, 1 line, 1 call site</dd>
+    <dt>Tests</dt><dd>ADAPT: which tests pin today's behaviour and which would have to change</dd>
+    <dt>Failure</dt><dd>ADAPT for a bug: input or steps, then the wrong result. Say "reproduced" or "read from the code".</dd>
+    <dt>Related</dt><dd>ADAPT: needs F3 first. Conflicts with F5. Also resolves F8, F12.</dd>
+  </dl>
+
+  <div class="options" role="group" aria-label="Options for F4">
+    <button type="button" class="option" data-option="Apply as proposed" data-accepts>
+      <b>Apply as proposed <span class="chip rule">needs rule exception</span></b>
+      <small>ADAPT: what it costs or changes. Size, risk, behaviour change, tests that must change.</small>
+    </button>
+    <button type="button" class="option" data-option="Reject" data-suggested>
+      <b>Reject <span class="chip suggested">suggested</span></b>
+      <small>ADAPT: what it costs to leave this alone.</small>
+    </button>
+  </div>
+  <input class="pick-note" type="text" maxlength="300" placeholder="Optional note" aria-label="Note for F4">
+</section>
+
+<!-- A product-mode card. Delete it in findings mode. -->
+<section class="card" data-id="delete">
+  <p class="id">delete</p>
+  <h2>ADAPT: the decision as a question, in the user's words?</h2>
+  <p>ADAPT: two or three plain sentences on what is true today.</p>
+  <p class="found"><b>Found while checking.</b> ADAPT: what running the app contradicted or exposed. Delete this line when there is nothing.</p>
+
+  <figure>
+    <div class="shot">
+      <img src="data:image/png;base64,ADAPT" alt="ADAPT: what the screenshot shows">
+      <span class="click" style="left: 50%; top: 50%" title="Click point"></span>
+    </div>
+    <figcaption><span class="chip">Screenshot</span> ADAPT: what it shows. The ring marks the click and is drawn on this page, not in the app.</figcaption>
+  </figure>
+  <figure>
+    <div class="mock">ADAPT: the option drawn in the product's own colours and type. Put class "new" on anything that does not exist yet.</div>
+    <figcaption><span class="chip">Drawing</span> Not a screenshot. ADAPT: which option this is.</figcaption>
+  </figure>
+  <figure>
+    <ol class="timeline">
+      <li><time>0.0 s</time> ADAPT: event the user cannot see in the window</li>
+      <li><time>2.0 s</time> ADAPT: next event</li>
+    </ol>
+    <figcaption><span class="chip">Diagram</span> ADAPT: what the timeline shows and where the timings came from.</figcaption>
+  </figure>
+
+  <div class="options" role="group" aria-label="Options for delete">
+    <button type="button" class="option" data-option="Undo toast" data-suggested>
+      <b>Undo toast <span class="chip suggested">suggested</span></b>
+      <small>ADAPT: what it costs or changes.</small>
+    </button>
+    <button type="button" class="option" data-option="Leave it as it is">
+      <b>Leave it as it is</b>
+      <small>ADAPT: what it costs to leave this alone.</small>
+    </button>
+  </div>
+  <input class="pick-note" type="text" maxlength="300" placeholder="Optional note" aria-label="Note for delete">
+</section>
+
+<details class="pile findings-only">
+  <summary>Rejected on checking (ADAPT: count)</summary>
+  <p>Not asked about. Say so in your note or in chat to overrule one.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Id</th><th>Claim</th><th>Why it was rejected</th></tr></thead>
+      <tbody>
+        <tr><td class="id">F5</td><td>ADAPT</td><td>ADAPT: one line, with the <code>path:line</code> that disproves it</td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<!-- ADAPT: end of page content -->
+
+<section class="summary" id="answers">
+  <h2>Your choices</h2>
+  <ul class="warnings" id="warnings" aria-live="polite"></ul>
+  <pre id="picks" tabindex="0" aria-label="Your choices as text"></pre>
+  <button type="button" class="btn" id="copy">Copy choices</button>
+  <p id="status" role="status"></p>
+  <p id="save-notice" hidden>Saving is unavailable in this browser, so a reload clears your picks. Copy the text before you leave the page.</p>
+</section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  var key = "help-me-decide:" + (document.querySelector("main").dataset.pageKey || location.pathname);
+  var cards = $(".card[data-id]");
+  var rows = $(".willdo tr[data-id]");
+  var picksEl = document.getElementById("picks");
+  var statusEl = document.getElementById("status");
+  var state = { picks: {}, notes: {}, objections: {} };
+  var canSave = true;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || "null");
+    if (saved) { ["picks", "notes", "objections"].forEach(function (k) { state[k] = saved[k] || {}; }); }
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch (err) { canSave = false; }
+  document.getElementById("save-notice").hidden = canSave;
+
+  function save() {
+    if (!canSave) return;
+    try { localStorage.setItem(key, JSON.stringify(state)); }
+    catch (err) { canSave = false; document.getElementById("save-notice").hidden = false; }
+  }
+
+  function ids(value) { return (value || "").split(/[\s,]+/).filter(Boolean); }
+
+  function isAccepted(id) {
+    var card = cards.filter(function (c) { return c.dataset.id === id; })[0];
+    if (card) {
+      var picked = $(".option", card).filter(function (o) { return o.dataset.option === state.picks[id]; })[0];
+      return picked ? picked.hasAttribute("data-accepts") : null;
+    }
+    var row = rows.filter(function (r) { return r.dataset.id === id; })[0];
+    return row ? !state.objections[id] : null;
+  }
+
+  function warnings() {
+    var out = [];
+    cards.forEach(function (card, index) {
+      var id = card.dataset.id;
+      if (isAccepted(id) !== true) return;
+      ids(card.dataset.needs).forEach(function (need) {
+        if (isAccepted(need) === false) out.push(id + " is accepted but needs " + need + " first, and " + need + " is not accepted.");
+      });
+      ids(card.dataset.conflicts).forEach(function (other) {
+        var otherIndex = cards.map(function (c) { return c.dataset.id; }).indexOf(other);
+        if (isAccepted(other) === true && (otherIndex === -1 || index < otherIndex)) out.push(id + " and " + other + " are both accepted but conflict. Keep one.");
+      });
+    });
+    return out;
+  }
+
+  function summaryText() {
+    var lines = [];
+    if (rows.length) {
+      var except = rows.map(function (r) { return r.dataset.id; }).filter(function (id) { return state.objections[id]; });
+      lines.push("will-do: all" + (except.length ? " except " + except.join(", ") : ""));
+    }
+    cards.forEach(function (card) {
+      var id = card.dataset.id;
+      var note = (state.notes[id] || "").replace(/\s+/g, " ").trim();
+      lines.push(id + ": " + (state.picks[id] || "(not picked)") + (note ? " | note: " + note : ""));
+    });
+    return lines.join("\n");
+  }
+
+  function render() {
+    var done = 0;
+    cards.forEach(function (card) {
+      var id = card.dataset.id;
+      $(".option", card).forEach(function (o) {
+        o.setAttribute("aria-pressed", String(o.dataset.option === state.picks[id]));
+      });
+      card.classList.toggle("picked", Boolean(state.picks[id]));
+      if (state.picks[id]) done += 1;
+    });
+    rows.forEach(function (row) { $(".object", row)[0].checked = Boolean(state.objections[row.dataset.id]); });
+    document.getElementById("count").textContent = done + " of " + cards.length;
+    picksEl.textContent = summaryText();
+    var list = document.getElementById("warnings");
+    list.textContent = "";
+    warnings().forEach(function (text) {
+      var li = document.createElement("li");
+      li.textContent = text;
+      list.appendChild(li);
+    });
+  }
+
+  cards.forEach(function (card) {
+    var id = card.dataset.id;
+    $(".option", card).forEach(function (o) {
+      o.addEventListener("click", function () {
+        if (state.picks[id] === o.dataset.option) delete state.picks[id];
+        else state.picks[id] = o.dataset.option;
+        save(); render();
+      });
+    });
+    var note = $(".pick-note", card)[0];
+    if (note) {
+      note.value = state.notes[id] || "";
+      note.addEventListener("input", function () { state.notes[id] = note.value; save(); render(); });
+    }
+  });
+
+  rows.forEach(function (row) {
+    $(".object", row)[0].addEventListener("change", function (event) {
+      if (event.target.checked) state.objections[row.dataset.id] = true;
+      else delete state.objections[row.dataset.id];
+      save(); render();
+    });
+  });
+
+  var acceptAll = document.getElementById("accept-all");
+  if (acceptAll) acceptAll.addEventListener("click", function () {
+    cards.forEach(function (card) {
+      var suggested = $(".option[data-suggested]", card)[0];
+      if (suggested && !state.picks[card.dataset.id]) state.picks[card.dataset.id] = suggested.dataset.option;
+    });
+    save(); render();
+  });
+
+  var severity = document.getElementById("severity");
+  if (severity) severity.addEventListener("change", function () {
+    var hiddenCount = 0;
+    cards.concat(rows).forEach(function (el) {
+      el.hidden = Boolean(severity.value) && el.dataset.severity !== severity.value;
+      if (el.hidden) hiddenCount += 1;
+    });
+    document.getElementById("hidden-count").textContent = hiddenCount ? hiddenCount + " hidden by this filter. They still count and still appear in your choices." : "";
+  });
+
+  $("pre.diff").forEach(function (pre) {
+    var lines = pre.textContent.split("\n");
+    pre.textContent = "";
+    lines.forEach(function (line) {
+      var span = document.createElement("span");
+      if (/^\+(?!\+\+ )/.test(line)) span.className = "add";
+      else if (/^-(?!-- )/.test(line)) span.className = "del";
+      span.textContent = line || " ";
+      pre.appendChild(span);
+    });
+  });
+
+  function selectPicks() {
+    var range = document.createRange();
+    range.selectNodeContents(picksEl);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    picksEl.focus();
+    statusEl.textContent = "The clipboard was refused. The text is selected: copy it by hand, then paste it into the chat.";
+  }
+
+  document.getElementById("copy").addEventListener("click", function () {
+    var text = summaryText();
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        statusEl.textContent = "Copied. Paste it into the chat.";
+      }, selectPicks);
+    } catch (err) { selectPicks(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
