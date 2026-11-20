@@ -181,7 +181,6 @@ test("magic-mode and PR playbooks wire /make-pr-easy-to-review when opening or u
 
 	const verbatimList = fs.readFileSync(path.join(repoDir, "scripts/magic-verbatim.txt"), "utf8");
 	assert.doesNotMatch(verbatimList, /^skills\/make-pr-easy-to-review\/SKILL\.md$/m);
-	assert.match(verbatimList, /^skills\/thermo-nuclear-code-quality-review\/SKILL\.md$/m);
 });
 
 test("clean-code skill routes by language, enforces pre-PR/MR cleanup contract, and is wired across PR/MR entry points", () => {

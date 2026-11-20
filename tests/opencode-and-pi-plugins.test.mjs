@@ -145,7 +145,7 @@ test("OpenCode V1: MagicPlugin registers skills path, injects V1 bootstrap idemp
 	assert.equal(flakySecond.messages[0].parts.length, 1, "subsequent lookup should recover and skip child session");
 });
 
-test("OpenCode V2: default.setup registers all 76 skills, survives hostile draft.add, registers context/compaction/generate, and skips child sessions", async () => {
+test("OpenCode V2: default.setup registers all 77 skills, survives hostile draft.add, registers context/compaction/generate, and skips child sessions", async () => {
 	const mod = await importFresh(pluginPath);
 
 	await mod.default.setup({});
@@ -155,7 +155,7 @@ test("OpenCode V2: default.setup registers all 76 skills, survives hostile draft
 		.filter((e) => e.isDirectory() && !e.name.startsWith(".") && fs.existsSync(path.join(skillsDir, e.name, "SKILL.md")))
 		.map((e) => e.name)
 		.sort();
-	assert.equal(expectedSkillDirs.length, 76, "expected 76 skills in skills/*/SKILL.md");
+	assert.equal(expectedSkillDirs.length, 77, "expected 77 skills in skills/*/SKILL.md");
 
 	const addedSkills = [];
 	const hooks = new Map();
@@ -179,7 +179,7 @@ test("OpenCode V2: default.setup registers all 76 skills, survives hostile draft
 		},
 	});
 
-	assert.equal(addedSkills.length, 76);
+	assert.equal(addedSkills.length, 77);
 	assert.deepEqual(
 		addedSkills.map((s) => s.id).sort(),
 		expectedSkillDirs,
@@ -256,7 +256,7 @@ test("OpenCode V2: default.setup registers all 76 skills, survives hostile draft
 	} finally {
 		console.error = origError;
 	}
-	assert.equal(survived.length, 75);
+	assert.equal(survived.length, 76);
 	assert.ok(!survived.includes(rejectedId));
 	assert.equal(survivingHooks.size, 3);
 });
@@ -375,7 +375,7 @@ test("OpenCode and Pi inject nothing unless MAGIC_ROUTING=always", async (t) => 
 		skill: { transform: async (fn) => fn({ add: (s) => addedSkills.push(s) }) },
 		session: { hook: async (name, cb) => hooks.set(name, cb) },
 	});
-	assert.equal(addedSkills.length, 76, "skills stay registered with routing off");
+	assert.equal(addedSkills.length, 77, "skills stay registered with routing off");
 	const v2Event = { sessionID: "off-root", messages: [{ role: "user", content: [{ type: "text", text: "Run task" }] }] };
 	await hooks.get("context")(v2Event);
 	assert.equal(v2Event.messages[0].content.length, 1);

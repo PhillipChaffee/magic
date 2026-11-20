@@ -33,6 +33,8 @@ Fit the shape to the call. A call about one item is one bullet: the call, your p
 
 For a call between options, give every option the work weighed, each with what it gets the user and what it costs, and the current state when there is one. Those costs are the call's risk, so add no separate risk line. When the screenshots above show the options, write each option's gain and cost under its screenshot.
 
+When three or more calls wait on the user, end with one line that offers `/help-me-decide` for a page with evidence and options.
+
 ## Visuals
 
 A visual is a picture: a screenshot, a video, a Mermaid diagram, a chart or diagram from a charting tool the harness offers, or a generated image. A Markdown table is not a visual, even with before and after columns.

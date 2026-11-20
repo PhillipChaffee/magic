@@ -78,6 +78,7 @@ The default answer is `/magic-mode`, which runs most of the others when its step
 | Catch up on their own recent work on a topic | [`/recall`](../recall/SKILL.md) |
 | Catch up on what changed in this chat since their last message, in plain words and small visuals, with every item waiting on them listed and decidable from the reply alone | [`/ketchup`](../ketchup/SKILL.md) |
 | Catch up like `/ketchup`, in a short subtitled video of slides, with the waiting calls as text under it | [`/ketchup-video`](../ketchup-video/SKILL.md) |
+| Decide three or more open questions or review findings from one page of evidence, pick an option for each, and paste the picks back | [`/help-me-decide`](../help-me-decide/SKILL.md) |
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
 | Settle types and module shape before code that crosses a function boundary | [`/architect`](../architect/SKILL.md) |
 | Write a bite-sized TDD implementation plan from a spec or requirements before touching code | [`/writing-plans`](../writing-plans/SKILL.md) |
@@ -126,6 +127,7 @@ Close calls:
 - `/architect` implements right after it settles the design. Add "with checkpoint" to review the design before it writes code.
 - `/interrogate` reviews the diff. `/blast-radius` looks for breakage outside the diff and proves the one fact that makes the change safe.
 - `/recall` rebuilds context across recent chats. `/ketchup` covers only this chat since the user's last message. Resuming one specific chat or branch is the Session pickup playbook.
+- `/ketchup` lists the calls waiting on the user in the reply. `/help-me-decide` builds a page with evidence and options for three or more of them, and acts on the picks the user pastes back.
 - `/figure-it-out` designs one rigorous run. The Orchestrate playbook runs a program that spans days and many PRs. The Autonomous run playbook drives one task to a finish condition.
 
 Not standalone skills:
