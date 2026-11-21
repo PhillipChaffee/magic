@@ -144,6 +144,7 @@ async function setup(ctx) {
 					id: entry.name,
 					name: frontmatter.name || entry.name,
 					...(frontmatter.description ? { description: frontmatter.description } : {}),
+					...(frontmatter["disable-model-invocation"] === "true" ? { autoinvoke: false } : {}),
 					path: skillPath,
 					content,
 				});

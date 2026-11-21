@@ -28,11 +28,11 @@ Skip arena Phases C, D, and E. Adversaries find different failures, so the verdi
 
 ## Output
 
-Keep every prose block to **at most 1-2 sentences**, open each section with a 1-sentence framing line, and use Markdown tables and bullets:
+Report these parts, shaped per the [reply style](../magic-mode/references/reply-style.md):
 
 - **Intent**: 1-2 sentences restating the change's intent.
-- **Findings**: a Markdown summary table (`| Finding | Command | Adversaries | How It Breaks Intent |`) plus 1-sentence bullets with the printed output vs. required output for each verified finding. Say "no verified findings" when none survive.
-- **Dropped**: a Markdown table (`| Adversary | Dropped Count | Reason |`) listing each adversary's dropped findings and why.
-- **TL;DR**: a `## TL;DR` section at the bottom with 1-2 plain sentences stating how many verified findings survived and the overall verdict.
+- **Findings**: for each verified finding, the command, the printed output vs. the required output, how it breaks the intent, and the adversaries that found it. Use a summary table (`| Finding | Command | Adversaries | How It Breaks Intent |`) when there are several. Say "no verified findings" when none survive.
+- **Dropped**: for each adversary, the count of dropped findings and why.
+- **Verdict**: how many verified findings survived and the overall verdict. Lead with it, or close with it as a `## TL;DR` when the report is long.
 
 When the run ends with three or more verified findings that need the user's judgment, hand them to the **help-me-decide** skill instead of listing them in chat.

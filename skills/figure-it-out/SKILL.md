@@ -1,5 +1,6 @@
 ---
 description: "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it-out or 'figure it out'."
+disable-model-invocation: true
 enabled: true
 id: figure-it-out
 name: figure-it-out
@@ -50,4 +51,4 @@ Log the run via the **show-me-your-work** skill. figure-it-out's work is usually
 
 Check the whole against the Phase A predicate on the real product, not just the harness. Encode any recurring correction as a gate, a lint rule, a check, or a script (the **encode-lessons-in-structure** principle skill).
 
-**Reply:** the playbook you designed (with a 1-sentence framing line before a Mermaid phase diagram and unit Markdown table), the rigor level and why (1-2 sentences max per prose block, bullets otherwise), the decision-trail path, what's verified against the predicate, what's still open, and a 1-2 sentence `## TL;DR` section at the bottom.
+**Reply:** the playbook you designed, the rigor level and why, the decision-trail path, what's verified against the predicate, and what's still open. Show the phases as a Mermaid diagram and the units as a Markdown table when the playbook has enough of them to need it. Shape it per the [reply style](../magic-mode/references/reply-style.md).

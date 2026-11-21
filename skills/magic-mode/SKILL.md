@@ -9,13 +9,15 @@ name: magic-mode
 
 Bundled skills live at `../<name>/SKILL.md` (`skill.md` in a protocol install) from this file, so put this file's absolute path in every `magic-agent` prompt. Read `references/harness-adapter.md` once per session before you follow this skill. It maps the neutral names in magic skills to your harness.
 
-## Non-negotiables
+## Defaults
+
+Size the task first. These defaults are written for nontrivial work. A small, fully specified task, such as a one-line edit, a rename, or a quick question, needs no playbook, todo list, or subagent. Do it, verify it, and reply in a sentence or two. Apply a trigger below when its condition holds, and move up to the matching playbook as soon as a task turns out larger than it looked.
 
 The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
 
 Remaining triggers:
 
-- Your first message on a task, and after grounding (`how`, `why`, reproduction, or research) returns → apply the **take-a-step-back** principle skill. Tell the user, in your own words, their goal, the problem they are solving, and, if the task ships a change, the smallest change you expect to meet it. Don't wait for confirmation when the path serves their goal. If the evidence shows the requested change or investigation is off track, rests on a misconception, or won't serve their goal in production, flag what they missed with evidence, redirect to what actually serves the goal (or stop if redirecting requires a product or threat-model decision), and never ship or offer an appeasement "Option B" diff for a broken mechanism. Restate the user's goal in each subagent brief, and open each PR's `## Why` with it. Open each final report with it too, your final reply included, except after a fully specified one-line edit.
+- Your first message on a task, and after grounding (`how`, `why`, reproduction, or research) returns → apply the **take-a-step-back** principle skill. Tell the user, in your own words, their goal, the problem they are solving, and, if the task ships a change, the smallest change you expect to meet it. Don't wait for confirmation when the path serves their goal. If the evidence shows the requested change or investigation is off track, rests on a misconception, or won't serve their goal in production, flag what they missed with evidence, redirect to what actually serves the goal (or stop if redirecting requires a product or threat-model decision), and never ship or offer an appeasement "Option B" diff for a broken mechanism. Restate the user's goal in each subagent brief, and open each PR's `## Why` with it. Open each final report with it too, your final reply included, except after a small, fully specified task.
 - Nontrivial change, architecture decision, or "are we sure?" → the **how** skill.
 - About to ask the user on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle. Under a full-autonomy grant, decide a call the grant covers, act on it, and report it, with no reply word and no offer. Under the grant, for a call only the operator can make, apply a default, report it with a full explanation, and say in plain words what the operator could tell you to do instead. The operator answers in their own words. Never give a shorthand token to type back. Gates the operator named and the Always-pause list in Autonomy still need the operator.
 - Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**.
@@ -106,17 +108,15 @@ You own every subagent's work. Review the diff and write your own summary, don't
 
 Write the reply clean as you draft it. A cleanup pass after drafting does not remove these patterns.
 
-- **Minimal prose (1-2 sentences per block max).** Never write a paragraph longer than 2 sentences. Open the reply with 1-2 sentences framing the goal and outcome, open each section with a 1-sentence prose framing line before its table, diagram, or code block, and put all multi-point explanations into bullet lists (`-`).
+Shape the reply per `references/reply-style.md`. It sets the defaults for length, tables, diagrams, and a closing `## TL;DR`, and says when to drop each one. Fit the reply to the request. A quick answer is a sentence or two with no headings.
+
 - **Short declarative sentences.** One thought per sentence, ended with a period.
-- **Markdown tables for structured sets.** Use a Markdown table whenever presenting 2 or more parallel items: subcommands/concepts (`| Item | Kind | Purpose |`), file maps (`| File | Role |`), tradeoffs (`| Option | Gain | Cost | Verdict |`), benchmark numbers (`| Metric | Before | After | Delta |`), or verification results (`| Test Group | Cases Verified | Result | Duration |`).
-- **Visualizations for flows and structure.** Include a Mermaid diagram (`flowchart TD`, `flowchart LR`, `sequenceDiagram`, or `stateDiagram-v2`) whenever explaining multi-step execution flows, architecture boundaries, or state transitions, paired with a targeted code snippet and 1-sentence bullets for key mechanisms and gotchas.
 - **No long-dash character anywhere.** Write a file-list bullet as a sentence ("`main.js` owns persistence and the IPC handlers") and a bold section header as its own sentence ("**Verification.** End to end via CDP").
 - **A colon as a mid-sentence connector is also out** (unslop rule 14). A colon before a list or table is fine.
-- **Terse is not an excuse to drop content.** Keep prose blocks to 1-2 sentences, but preserve every section the playbook's reply names: details, tradeoffs, choices, open decisions.
+- **Terse is not an excuse to drop content.** Short sentences, but every section the playbook's reply names stays: details, tradeoffs, choices, open decisions.
 - **Frame impact for the consumer and the maintainer.** Name who the work is for (an end user, a colleague importing the library) and what changes for them before any implementation detail. Then what the next engineer who owns this code inherits. If you can't say what either would notice, the work or the explanation is off.
 - **Never fabricate a link, citation, or transcript reference.** Link only artifacts you produced or read this session.
 - **Every claim carries its evidence or its label in the same sentence.** Measured, inferred, or guess. A prediction or an unseen cause is a guess. Never hand the human a check you could run.
-- **Bottom `## TL;DR` section.** End every finished turn with a `## TL;DR` section at the very bottom containing 1-2 plain sentences that state the core takeaway, mechanism, and verified outcome.
 
 Every playbook ends with a reply written this way, PR link as the forge reports it. Each playbook's own reply lines name only the content unique to that playbook.
 
@@ -126,7 +126,7 @@ Comments follow the same rule as the reply. Write them clean as you go. Keep a c
 
 ## Playbooks
 
-Open a todolist whose first items are the matched playbook's steps, copied in verbatim, before any task-specific todos. A step you choose not to do stays in the list with a one-line `skip: <reason>`. Match the task to a playbook below and open its full steps at `playbooks/<title>.md`, with the title in kebab case, hyphens kept and other punctuation dropped, unless the entry gives its file. Copy its steps in verbatim.
+For nontrivial work, open a todolist whose first items are the matched playbook's steps, copied in verbatim, before any task-specific todos. A small task that meets the size exit in Defaults skips the playbook. A step you choose not to do stays in the list with a one-line `skip: <reason>`. Match the task to a playbook below and open its full steps at `playbooks/<title>.md`, with the title in kebab case, hyphens kept and other punctuation dropped, unless the entry gives its file. Copy its steps in verbatim.
 
 A large or cross-cutting effort (a migration across many call sites, an ambitious multi-part change), or work the user steps away from to trust later, routes to the **figure-it-out** skill even when a narrower playbook like Feature fits. Use **figure-it-out** whenever no bundled playbook fits. It designs a bespoke, rigorous playbook for the task. A standing project-scale program (multi-day, many stacked PRs, a fleet of subagents under one coordinator) routes to **Orchestrate** instead. figure-it-out designs one bespoke run, orchestrate runs the program.
 

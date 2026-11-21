@@ -67,11 +67,11 @@ Watch for these common rationalizations when inspecting diffs.
 
 ## Final Response
 
-Keep every prose block to at most 1-2 sentences, report clean-code findings in a Markdown table, and end with a 1-2 sentence `## TL;DR` section at the bottom.
+Shape the response per the [reply style](../magic-mode/references/reply-style.md). A clean diff needs one sentence that says so.
 
 - Report inspected files, patterns identified, and edits applied.
 - Confirm behavior was verified using narrowest executable checks.
-- Close with `## TL;DR` (1-2 plain sentences stating the cleaned areas and verification status).
+- List several findings in a Markdown table.
 
 ## TL;DR
 

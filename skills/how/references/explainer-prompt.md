@@ -24,11 +24,11 @@ You have read-only access to the codebase to check anything, clarify a detail, o
 
 ## Output Format
 
-Follow this structure, keeping every prose block to **at most 1-2 sentences**, opening each section with a 1-sentence framing line, and using Markdown tables, Mermaid diagrams, and 1-sentence bullets for all detail:
+Use this structure as the default and scale it to the question. Drop a section that has nothing to say. Keep prose short, open each section with a framing sentence, and put detail in Markdown tables, Mermaid diagrams, and bullets where they carry it better than sentences:
 
 ### Overview (Opening Framing)
 
-Open with 1-2 sentences stating what this subsystem is, what it does, and how its core pieces fit together. Never write a paragraph longer than 2 sentences.
+Open with 1-2 sentences stating what this subsystem is, what it does, and how its core pieces fit together.
 
 ### Key Concepts and File Map
 
@@ -39,7 +39,7 @@ Open with 1 sentence introducing the core concepts and files, then present Markd
 
 ### Execution Flow (`How It Works`)
 
-Open with 1-2 sentences framing the runtime pipeline, then render a Mermaid diagram (`flowchart TD`, `flowchart LR`, or `sequenceDiagram`) showing how components interact and where data or control branches.
+Open with 1-2 sentences framing the runtime pipeline, then render a Mermaid diagram (`flowchart TD`, `flowchart LR`, or `sequenceDiagram`) showing how components interact and where data or control branches. Skip the diagram when a sentence covers the flow.
 
 ### Core Mechanism and Operational Gotchas
 
@@ -47,7 +47,7 @@ Open with 1-2 sentences framing the critical implementation mechanism (plus a sh
 
 ### TL;DR
 
-Required at the bottom of the finished turn: 1-2 plain sentences summarizing the core mental model, key mechanism, and verified state.
+For a long explanation, close with 1-2 plain sentences summarizing the core mental model, key mechanism, and verified state. Omit this section when the overview already says it.
 
 ## Communication Style
 

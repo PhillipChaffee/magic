@@ -1,5 +1,6 @@
 ---
 description: "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape."
+disable-model-invocation: true
 enabled: true
 id: arena
 name: arena
@@ -46,4 +47,4 @@ Verify the synthesized artifact like any other output, per the **prove-it-works*
 
 ## Outputs
 
-One synthesized artifact, with a structured synthesis report alongside (1-2 sentence max prose blocks, a candidate comparison Markdown table scoring each criterion, bullets naming the base and why, the cross-judge's verdict or that Phase C skipped the judge, each graft with its source candidate, what was rejected and why, any convergence or dropouts, the verification result, and a 1-2 sentence `## TL;DR` section at the bottom).
+One synthesized artifact, with a synthesis report alongside, shaped per the [reply style](../magic-mode/references/reply-style.md): a candidate comparison table scoring each criterion, the base and why, the cross-judge's verdict or that Phase C skipped the judge, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.

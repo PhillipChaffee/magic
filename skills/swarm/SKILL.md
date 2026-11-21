@@ -1,5 +1,6 @@
 ---
 description: "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration."
+disable-model-invocation: true
 enabled: true
 id: swarm
 name: swarm
@@ -39,4 +40,4 @@ Read the terminal results. Drop a result that does not record the SHAs and metho
 
 ## Phase D: Report
 
-Return one consolidated in-chat report (1-2 sentence max prose blocks) with a result Markdown table, issue one-liner bullets, gaps or dropouts, the race rule when used, and a 1-2 sentence `## TL;DR` section at the bottom.
+Return one consolidated in-chat report with a result table, issue one-liners, gaps or dropouts, and the race rule when used. Shape it per the [reply style](../magic-mode/references/reply-style.md).

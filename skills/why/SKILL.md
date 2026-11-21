@@ -92,9 +92,9 @@ Present the synthesizer's output to the user. You may lightly edit for clarity o
 
 ## Output Format
 
-The structure is the one in `references/synthesizer-prompt.md`: The Question (1-2 sentences), The Code in Question (1-sentence framing + Markdown table), Causal / Timeline Visualization (1-sentence framing + Mermaid diagram when multi-step history exists), What We Found (cited bullets), What We Can Reasonably Infer (hedged bullets), Competing Hypotheses (Markdown table), What We Don't Know (bullets), Sources Consulted (Markdown table), and a 1-2 sentence `### TL;DR` section at the bottom. Keep every prose block to at most 1-2 sentences, preserve the confidence separation, and include every investigator in the Sources Consulted table.
+The structure is the one in `references/synthesizer-prompt.md`: The Question, The Code in Question (Markdown table), Causal / Timeline Visualization (Mermaid diagram when multi-step history exists), What We Found (cited bullets), What We Can Reasonably Infer (hedged bullets), Competing Hypotheses (Markdown table), What We Don't Know (bullets), Sources Consulted (Markdown table), and a closing `### TL;DR` when the answer is long. Drop a section that has nothing to say. Shape it per the [reply style](../magic-mode/references/reply-style.md), preserve the confidence separation, and include every investigator in the Sources Consulted table.
 
-After Sources Consulted, if the user's `why` question is a precursor to changing this code, convert the lineage findings into a Preserve / Change / Avoid / Risk Markdown table before the bottom `### TL;DR`.
+After Sources Consulted, if the user's `why` question is a precursor to changing this code, convert the lineage findings into a Preserve / Change / Avoid / Risk Markdown table after it.
 
 ## Common Failure Modes to Avoid
 

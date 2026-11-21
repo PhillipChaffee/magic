@@ -91,6 +91,12 @@ Complete reference of the **23 execution playbooks**, **77 active skills** (**52
 | **Meta & Skill Evolution** | [`/correct`](../skills/correct/SKILL.md) | Stopping repeated agent mistakes at the highest structural level that works |
 | **Meta & Skill Evolution** | [`/automate-me`](../skills/automate-me/SKILL.md) | Drafting a personal `-mode` skill from your actual working history |
 
+### Skills That Load Only When You Ask
+
+Each of these skills loads when you type its command or when `/magic-mode` reads it for a playbook step. A description match never loads it. The [harness adapter](../skills/magic-mode/references/harness-adapter.md) names the mechanism on each harness.
+
+`/arena`, `/autopilot`, `/correct`, `/create-formal-verification-skill`, `/create-verification-skill`, `/figure-it-out`, `/interrogate`, `/ketchup-video`, `/maintain-formal-verification-skill`, `/maintain-verification-skill`, `/make-bot-ui`, `/principle-explain-the-number`, `/reflect`, `/statechart`, `/swarm`, `/tdd`, `/thermo-nuclear-code-quality-review`
+
 ---
 
 ## 25 Engineering Principles (`/principle-<name>`)

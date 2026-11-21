@@ -192,6 +192,9 @@ test("OpenCode V2: default.setup registers all 77 skills, survives hostile draft
 		assert.ok(!skill.content.startsWith("---"), `skill ${skill.id} content must strip frontmatter`);
 		assert.ok(!("location" in skill));
 	}
+	const registered = new Map(addedSkills.map((s) => [s.id, s]));
+	assert.equal(registered.get("swarm").autoinvoke, false, "a user-invoked skill must register with autoinvoke off");
+	assert.ok(!("autoinvoke" in registered.get("research")), "a model-invocable skill must keep the host default");
 
 	assert.deepEqual([...hooks.keys()].sort(), ["compaction", "context", "generate"]);
 	assert.equal(hooks.get("compaction"), hooks.get("context"));
