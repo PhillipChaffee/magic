@@ -272,7 +272,7 @@ test("Pi Extension & package.json: manifest contract, lifecycle hooks, multi-pro
 		skills: ["./skills"],
 	});
 	assert.equal(pkg.dependencies, undefined);
-	assert.equal(pkg.devDependencies, undefined);
+	assert.deepEqual(Object.keys(pkg.devDependencies), ["skill-evals"]);
 
 	const handlers = new Map();
 	const pi = {

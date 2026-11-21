@@ -152,3 +152,15 @@ node --test tests/*.test.mjs
 | **Installer Sandbox Suite** | `python3 -m unittest discover -s tests` | Byte-identical install, executable bit preservation, `SKILL.md`/`skill.md` parity, `--dry-run`, `--prune`, `--uninstall` |
 | **CLI & Skill Safety Suite** | `node --test tests/*.test.mjs` | Worktree dirty/untracked/ignored hold gates, statechart path confinement, proof cheat scanner, plugin manifests/hooks, and flowchart rendering |
 | **Repo Hygiene CI (`validate.yml`)** | `typos` · `markdownlint-cli2` · `lychee` · `gitleaks` · `jscpd` · `shellcheck` · `shfmt` · `yamllint` · `actionlint` | Zero typos, clean Markdown, live links, zero secrets, `< 5%` code duplication, and clean shell/workflow scripts |
+
+### Run evals against the kit
+
+[`skill-evals`](https://github.com/PhillipChaffee/skill-evals) is installed as a dev dependency. It runs prompts in a real harness with the kit loaded and scores each run from 0 to 1. The kit has no eval cases yet; put them in `evals/cases/`, where `skill-evals` looks by default.
+
+```sh
+npm install
+npm run evals -- check   # which harnesses work on this machine
+npm run evals -- score   # score this checkout, once cases exist
+```
+
+Every run is unattended and has full permissions in its harness, so only run prompts you wrote or read. See the [`skill-evals` docs](https://phillipchaffee.github.io/skill-evals/docs/) for the case format and the flags.
