@@ -3,6 +3,31 @@
 
 set -euo pipefail
 
+# emit_json absorbs EPIPE without a pipe through `cat`. On Windows + Git
+# Bash, the harness can close the hook's stdout before printf finishes, and
+# Git Bash's printf reports that EPIPE as "printf: write error: Permission
+# denied", which `set -euo pipefail` would let escape as a startup diagnostic
+# every session (#1612). SIGPIPE is ignored so other platforms see the same
+# EPIPE error instead of a signal; the error message is dropped and the
+# status ignored. No external command is involved, so a broken PATH (#2310)
+# changes nothing.
+emit_json() {
+  trap '' PIPE
+  # shellcheck disable=SC2059 # every caller passes a literal format string
+  printf "$@" 2>/dev/null || true
+}
+
+# Routing is opt-in. The hook injects the using-magic skill only when the
+# user set MAGIC_ROUTING=always. Otherwise it adds nothing to the session:
+# Cursor reads the hook's stdout as JSON, so it gets an empty object, and the
+# other harnesses accept no output.
+if [ "${MAGIC_ROUTING:-}" != "always" ]; then
+  if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+    emit_json '{}\n'
+  fi
+  exit 0
+fi
+
 # Determine plugin root directory.
 # Splits $0 on its last / or \ (run-hook.cmd's cmd half passes a Windows
 # path), with no separator meaning the current directory. This avoids
@@ -46,7 +71,7 @@ escape_for_json() {
 }
 
 escape_for_json "$using_magic_content"
-session_context="<EXTREMELY_IMPORTANT>\nYou have magic.\n\n**Below is the full content of your 'magic:using-magic' bootstrap skill. Follow it to route every task. For all other skills, use your platform's skill tool or read the skill's SKILL.md:**\n\n${using_magic_escaped}\n</EXTREMELY_IMPORTANT>"
+session_context="<magic-routing>\nThe user turned on magic routing for every session with MAGIC_ROUTING=always. The 'magic:using-magic' skill follows and is already loaded. For all other skills, use your platform's skill tool or read the skill's SKILL.md.\n\n${using_magic_escaped}\n</magic-routing>"
 
 # Output context injection as JSON.
 # Cursor hooks expect additional_context (snake_case).
@@ -58,21 +83,6 @@ session_context="<EXTREMELY_IMPORTANT>\nYou have magic.\n\n**Below is the full c
 #
 # Uses printf instead of heredoc to work around bash 5.3+ heredoc hang.
 # See: https://github.com/obra/superpowers/issues/571
-#
-# emit_json absorbs EPIPE without a pipe through `cat`. On Windows + Git
-# Bash, the harness can close the hook's stdout before printf finishes, and
-# Git Bash's printf reports that EPIPE as "printf: write error: Permission
-# denied", which `set -euo pipefail` would let escape as a startup diagnostic
-# every session (#1612). SIGPIPE is ignored so other platforms see the same
-# EPIPE error instead of a signal; the error message is dropped and the
-# status ignored. No external command is involved, so a broken PATH (#2310)
-# changes nothing.
-emit_json() {
-  trap '' PIPE
-  # shellcheck disable=SC2059 # every caller passes a literal format string
-  printf "$@" 2>/dev/null || true
-}
-
 if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
   # Cursor sets CURSOR_PLUGIN_ROOT (may also set CLAUDE_PLUGIN_ROOT)
   emit_json '{\n  "additional_context": "%s"\n}\n' "$session_context"

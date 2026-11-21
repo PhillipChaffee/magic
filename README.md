@@ -11,7 +11,7 @@
 
 ## Installation
 
-Install `magic` as a native plugin for your coding harness, or sync it as a `.agents` directory (`~/.agents` globally or `.agents/` in a project). When installed as a plugin, `using-magic` loads automatically at session start. **You never need to invoke `/using-magic` yourself**—just state your task in plain language or invoke a skill like `/magic-mode` directly.
+Install `magic` as a native plugin for your coding harness, or sync it as a `.agents` directory (`~/.agents` globally or `.agents/` in a project). **Installing changes nothing until you invoke a skill.** Routing is opt-in: start a task with `/magic-mode`, or see [Opt In to Routing](#opt-in-to-routing) to turn it on for every session.
 
 ### Claude Code
 
@@ -70,7 +70,7 @@ Sync `magic` non-destructively into `~/.agents` (or clone directly to `~/.agents
 git clone https://github.com/PhillipChaffee/magic.git && cd magic && ./scripts/install.sh --target agents
 ```
 
-**What works vs. what doesn't without a plugin:** `Cursor`, `Codex`, and `OpenCode` auto-discover `~/.agents/skills/` (and `.agents/skills/`), whereas `Claude Code` and `Pi` do not scan `~/.agents/` by default. Without native plugin installation or manual bridging, no harness runs `SessionStart` hooks, plugin injectors, or `~/.agents/rules/*.md` automatically, so you must invoke `/magic-mode` or `/using-magic` manually.
+**What works vs. what doesn't without a plugin:** `Cursor`, `Codex`, and `OpenCode` auto-discover `~/.agents/skills/` (and `.agents/skills/`), whereas `Claude Code` and `Pi` do not scan `~/.agents/` by default. Without native plugin installation or manual bridging, no harness runs `SessionStart` hooks, plugin injectors, or `~/.agents/rules/*.md`, so `MAGIC_ROUTING=always` does nothing there. Start each task with `/magic-mode` instead.
 
 <details>
 <summary><strong><code>.agents</code> directory CLI flags &amp; per-harness behavior</strong></summary>
@@ -90,24 +90,44 @@ git clone https://github.com/PhillipChaffee/magic.git && cd magic && ./scripts/i
 | Harness | What Works from `~/.agents` Alone | What Does **Not** Work Without the Plugin (and How to Bridge Manually) |
 | --- | --- | --- |
 | **Cursor** | Auto-discovers `~/.agents/skills/` and `.agents/skills/` in local sessions | **No `sessionStart` hook**, **no `~/.agents/rules/*.md` or `agents.md`** (Cursor requires `.mdc` files in `~/.cursor/rules/`), **no named `agents/` registration**, and local `~/.agents/` is not mounted in Cloud Agents. |
-| **Codex CLI / App** | Auto-discovers `~/.agents/skills/` and `.agents/skills/` (surfaces `using-magic` in the skill index) | **No `~/.agents/rules/*.md` or `agents.md`** (Codex reads `~/.codex/AGENTS.md` and uses `~/.codex/rules/*.rules` for Starlark command allowlists, not Markdown rules). |
+| **Codex CLI / App** | Auto-discovers `~/.agents/skills/` and `.agents/skills/` | **No `~/.agents/rules/*.md` or `agents.md`** (Codex reads `~/.codex/AGENTS.md` and uses `~/.codex/rules/*.rules` for Starlark command allowlists, not Markdown rules). |
 | **OpenCode (V1 & V2)** | Auto-discovers `~/.agents/skills/` and `.agents/skills/` | **No `.opencode/plugins/magic.js` bootstrap or V1/V2 tool-mapping injection**, and **no `~/.agents/rules/*.md` or `agents.md`** unless you add `"instructions": ["~/.agents/agents.md", "~/.agents/rules/*.md"]` to `opencode.json`. |
 | **Claude Code** | *None by default* (Claude Code only scans `~/.claude/` and `.claude/`) | **No `SessionStart` hook, skills, agents, or rules** unless you symlink `~/.claude/{skills,agents,rules}` to `~/.agents/` and `@`-import `~/.agents/agents.md` in `~/.claude/CLAUDE.md`. |
 | **Pi** | *None by default* (Pi does not scan `~/.agents/`) | **No `.pi/extensions/magic.ts` bootstrap, Pi tool mapping, or skills** unless installed as a Pi package (`pi install` or `pi -e`). |
 
 </details>
 
+### Opt In to Routing
+
+Routing sends each task to its entry-point skill (`/magic-mode`, `/research`, `/proof-driven-development`, or the PR skills). It is off until you turn it on.
+
+| How you opt in | Lasts | Works on |
+| --- | --- | --- |
+| Start a task with `/magic-mode` | The session, until you tell it to stop | Every harness |
+| Set `MAGIC_ROUTING=always` in the environment your harness runs in | Every session. The plugin loads [`using-magic`](skills/using-magic/SKILL.md) at session start. | Plugin installs on Claude Code, Cursor, OpenCode, and Pi |
+| Add a line such as "Follow the `using-magic` skill for every task" to your instruction file (`CLAUDE.md`, `AGENTS.md`) | Every session | Every harness, including Codex and bare `.agents` installs |
+
+On Claude Code, set the variable in the `env` block of `settings.json`:
+
+```json
+{
+  "env": { "MAGIC_ROUTING": "always" }
+}
+```
+
+Without any of these, a skill loads only when you type it or when its description fits your request.
+
 ---
 
 ## The Basic Workflow
 
-`magic` intercepts every request at session start, routes it to the right workflow, and verifies the result before shipping.
+`magic` routes a task to the right workflow and verifies the result before shipping. It does this only after you opt in.
 
 <p align="center">
-  <img src="assets/workflow-diagram.svg" alt="magic workflow: 1. Session Start to 2. Route Task to 3. Research and 4. Architect and Plan to 5. Execute and Prove to 6. Review and Clean to 7. Ship" width="100%" />
+  <img src="assets/workflow-diagram.svg" alt="magic workflow: 1. Opt In to 2. Route Task to 3. Research and 4. Architect and Plan to 5. Execute and Prove to 6. Review and Clean to 7. Ship" width="100%" />
 </p>
 
-- **1. Route ([`using-magic`](skills/using-magic/SKILL.md), [`workflow-routing`](rules/workflow-routing.md))** — Auto-injected at session start on plugin installs (no manual invocation needed; invoke manually only on bare `.agents` directory installs) to load the matching entry-point skill before the first tool call.
+- **1. Opt in ([`magic-mode`](skills/magic-mode/SKILL.md), [`using-magic`](skills/using-magic/SKILL.md))** — Start a task with `/magic-mode`, or turn routing on for every session. Either one loads the matching entry-point skill before work starts on a task.
 - **2. Understand ([`research`](skills/research/SKILL.md), [`how`](skills/how/SKILL.md), [`why`](skills/why/SKILL.md))** — Dispatches read-only sub-agents to investigate code, history, or options into `docs/research/<topic>.md`.
 - **3. Design ([`architect`](skills/architect/SKILL.md), [`writing-plans`](skills/writing-plans/SKILL.md))** — Settles types and module boundaries, then writes a bite-sized TDD implementation plan.
 - **4. Execute ([`magic-mode`](skills/magic-mode/SKILL.md), [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md))** — Runs one of 23 step-by-step playbooks or dispatches a fresh implementer + reviewer sub-agent per task.
@@ -134,7 +154,7 @@ Full upstream commit hashes, provenance notes, and MIT license notices are prese
 
 ## Catalog Reference
 
-Browse the full inventory of **23 playbooks**, **77 active skills** (**52 workflow/domain skills** + **25 engineering principles**), **7 sub-agents**, and **5 operational rules** in **[`docs/CATALOG.md`](docs/CATALOG.md)**.
+Browse the full inventory of **23 playbooks**, **77 active skills** (**52 workflow/domain skills** + **25 engineering principles**), **7 sub-agents**, and **4 operational rules** in **[`docs/CATALOG.md`](docs/CATALOG.md)**.
 
 ---
 

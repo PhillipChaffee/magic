@@ -29,7 +29,7 @@ function parseHookOutput(stdout, shape) {
 	} else {
 		assert.fail(`unknown shape: ${shape}`);
 	}
-	assert.match(context, /^<EXTREMELY_IMPORTANT>\nYou have magic\./);
+	assert.match(context, /^<magic-routing>\nThe user turned on magic routing for every session/);
 	assert.match(context, /magic:using-magic/);
 	assert.match(context, /# Using Magic/);
 	assert.doesNotMatch(context, /Error reading using-magic skill/);
@@ -63,7 +63,7 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 		{
 			name: "Claude Code nested hookSpecificOutput",
 			shape: "nested",
-			env: { HOME: tmpDir, PATH: process.env.PATH ?? "", CLAUDE_PLUGIN_ROOT: repoDir },
+			env: { HOME: tmpDir, PATH: process.env.PATH ?? "", CLAUDE_PLUGIN_ROOT: repoDir, MAGIC_ROUTING: "always" },
 		},
 		{
 			name: "Cursor additional_context precedence over CLAUDE_PLUGIN_ROOT",
@@ -73,6 +73,7 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 				PATH: process.env.PATH ?? "",
 				CURSOR_PLUGIN_ROOT: repoDir,
 				CLAUDE_PLUGIN_ROOT: repoDir,
+				MAGIC_ROUTING: "always",
 			},
 		},
 		{
@@ -83,12 +84,13 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 				PATH: process.env.PATH ?? "",
 				COPILOT_CLI: "1",
 				CLAUDE_PLUGIN_ROOT: repoDir,
+				MAGIC_ROUTING: "always",
 			},
 		},
 		{
 			name: "Empty PATH survival",
 			shape: "nested",
-			env: { HOME: tmpDir, PATH: "", CLAUDE_PLUGIN_ROOT: repoDir },
+			env: { HOME: tmpDir, PATH: "", CLAUDE_PLUGIN_ROOT: repoDir, MAGIC_ROUTING: "always" },
 		},
 	];
 
@@ -104,7 +106,7 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 	for (const cmd of ["exec \"$1\" session-start", "exec \"$1\" run-hook.cmd session-start"]) {
 		const res = spawnSync(bashBin, ["-c", cmd, "_", bashBin], {
 			cwd: hooksDir,
-			env: { HOME: tmpDir, PATH: "", CLAUDE_PLUGIN_ROOT: repoDir },
+			env: { HOME: tmpDir, PATH: "", CLAUDE_PLUGIN_ROOT: repoDir, MAGIC_ROUTING: "always" },
 			encoding: "utf8",
 		});
 		assert.equal(res.status, 0, res.stderr);
@@ -118,7 +120,7 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 	fs.symlinkSync(sessionStartHook, path.join(backslashRoot, "hooks\\session-start"));
 	const backslashRes = spawnSync(bashBin, ["hooks\\session-start"], {
 		cwd: backslashRoot,
-		env: { HOME: tmpDir, PATH: "", CLAUDE_PLUGIN_ROOT: repoDir },
+		env: { HOME: tmpDir, PATH: "", CLAUDE_PLUGIN_ROOT: repoDir, MAGIC_ROUTING: "always" },
 		encoding: "utf8",
 	});
 	assert.equal(backslashRes.status, 0, backslashRes.stderr);
@@ -129,7 +131,7 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 		`"${bashBin}" "${runHookCmd}" session-start | :`,
 	]) {
 		const closedRes = spawnSync(bashBin, ["-o", "pipefail", "-c", target], {
-			env: { HOME: tmpDir, PATH: process.env.PATH ?? "", CLAUDE_PLUGIN_ROOT: repoDir },
+			env: { HOME: tmpDir, PATH: process.env.PATH ?? "", CLAUDE_PLUGIN_ROOT: repoDir, MAGIC_ROUTING: "always" },
 			encoding: "utf8",
 		});
 		assert.equal(closedRes.status, 0, closedRes.stderr);
@@ -144,13 +146,39 @@ test("session-start and run-hook.cmd emit mutually exclusive harness JSON shapes
 				straceCheck.stdout.trim(),
 				["-f", "-qq", "-e", "trace=fork,vfork,clone,clone3", "-o", forkLog, bashBin, ...args],
 				{
-					env: { HOME: tmpDir, PATH: process.env.PATH ?? "", CLAUDE_PLUGIN_ROOT: repoDir },
+					env: { HOME: tmpDir, PATH: process.env.PATH ?? "", CLAUDE_PLUGIN_ROOT: repoDir, MAGIC_ROUTING: "always" },
 					encoding: "utf8",
 				},
 			);
 			assert.equal(traceRes.status, 0, traceRes.stderr);
 			const logText = fs.readFileSync(forkLog, "utf8");
 			assert.doesNotMatch(logText, /(?:fork|clone3?)\(/, `expected zero child forks for ${args.join(" ")}`);
+		}
+	}
+});
+
+test("session-start adds nothing to the session unless MAGIC_ROUTING=always", (t) => {
+	const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "dot-agents-hooks-off-"));
+	t.after(() => fs.rmSync(tmpDir, { recursive: true, force: true }));
+	const base = { HOME: tmpDir, PATH: process.env.PATH ?? "" };
+
+	for (const args of [[sessionStartHook], [runHookCmd, "session-start"]]) {
+		for (const routing of [{}, { MAGIC_ROUTING: "" }, { MAGIC_ROUTING: "off" }, { MAGIC_ROUTING: "ALWAYS" }]) {
+			const claude = spawnSync(bashBin, args, {
+				env: { ...base, CLAUDE_PLUGIN_ROOT: repoDir, ...routing },
+				encoding: "utf8",
+			});
+			assert.equal(claude.status, 0, claude.stderr);
+			assert.equal(claude.stderr, "");
+			assert.equal(claude.stdout, "", `Claude Code must get no output for ${JSON.stringify(routing)}`);
+
+			const cursor = spawnSync(bashBin, args, {
+				env: { ...base, CURSOR_PLUGIN_ROOT: repoDir, CLAUDE_PLUGIN_ROOT: repoDir, ...routing },
+				encoding: "utf8",
+			});
+			assert.equal(cursor.status, 0, cursor.stderr);
+			assert.equal(cursor.stderr, "");
+			assert.deepEqual(JSON.parse(cursor.stdout), {}, `Cursor must get an empty object for ${JSON.stringify(routing)}`);
 		}
 	}
 });

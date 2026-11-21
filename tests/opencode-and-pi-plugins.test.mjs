@@ -13,7 +13,8 @@ const corePath = path.join(repoDir, "lib/bootstrap-core.js");
 const piExtensionPath = path.join(repoDir, ".pi/extensions/magic.ts");
 const packageJsonPath = path.join(repoDir, "package.json");
 
-const expectedMarker = "<EXTREMELY_IMPORTANT>\nYou have magic.";
+const expectedMarker = "<magic-routing>";
+process.env.MAGIC_ROUTING = "always";
 let importCounter = 0;
 
 async function importFresh(filePath) {
@@ -90,7 +91,7 @@ test("OpenCode V1: MagicPlugin registers skills path, injects V1 bootstrap idemp
 		messages: [
 			{
 				info: { role: "user", sessionID: "sess-root" },
-				parts: [{ type: "text", text: "Help me refactor this module and mention EXTREMELY_IMPORTANT" }],
+				parts: [{ type: "text", text: "Help me refactor this module and mention <magic-routing>" }],
 			},
 		],
 	};
@@ -319,7 +320,7 @@ test("Pi Extension & package.json: manifest contract, lifecycle hooks, multi-pro
 			assert.ok(res, `prompt ${promptIdx + 1} req ${req} must return injected messages`);
 			assert.equal(res.messages.length, history.length + 1);
 			assert.equal(res.messages[0].role, "user");
-			assert.match(textOf(res.messages[0]), /You have magic\./);
+			assert.match(textOf(res.messages[0]), /MAGIC_ROUTING=always/);
 			assert.match(textOf(res.messages[0]), /# Using Magic/);
 			assert.match(textOf(res.messages[0]), /## Pi tool mapping/);
 
@@ -339,6 +340,53 @@ test("Pi Extension & package.json: manifest contract, lifecycle hooks, multi-pro
 	assert.equal(compactedRes.messages[0], summary1);
 	assert.equal(compactedRes.messages[1], summary2);
 	assert.equal(compactedRes.messages[2].role, "user");
-	assert.match(textOf(compactedRes.messages[2]), /You have magic\./);
+	assert.match(textOf(compactedRes.messages[2]), /MAGIC_ROUTING=always/);
 	assert.equal(compactedRes.messages[3], nextUser);
+});
+
+test("OpenCode and Pi inject nothing unless MAGIC_ROUTING=always", async (t) => {
+	const saved = process.env.MAGIC_ROUTING;
+	t.after(() => {
+		process.env.MAGIC_ROUTING = saved;
+	});
+
+	const core = await importFresh(corePath);
+	assert.equal(core.routingEnabled({ MAGIC_ROUTING: "always" }), true);
+	for (const env of [{}, { MAGIC_ROUTING: "" }, { MAGIC_ROUTING: "off" }, { MAGIC_ROUTING: "ALWAYS" }]) {
+		assert.equal(core.routingEnabled(env), false, `routing must be off for ${JSON.stringify(env)}`);
+	}
+
+	delete process.env.MAGIC_ROUTING;
+
+	const mod = await importFresh(pluginPath);
+	const plugin = await mod.MagicPlugin({ client: undefined, directory: repoDir });
+	const v1Config = {};
+	await plugin.config(v1Config);
+	assert.deepEqual(v1Config.skills.paths, [skillsDir], "skills stay registered with routing off");
+	const v1Output = {
+		messages: [{ info: { role: "user", sessionID: "off-root" }, parts: [{ type: "text", text: "Run task" }] }],
+	};
+	await plugin["experimental.chat.messages.transform"]({}, v1Output);
+	assert.equal(v1Output.messages[0].parts.length, 1);
+
+	const addedSkills = [];
+	const hooks = new Map();
+	await mod.default.setup({
+		skill: { transform: async (fn) => fn({ add: (s) => addedSkills.push(s) }) },
+		session: { hook: async (name, cb) => hooks.set(name, cb) },
+	});
+	assert.equal(addedSkills.length, 77, "skills stay registered with routing off");
+	const v2Event = { sessionID: "off-root", messages: [{ role: "user", content: [{ type: "text", text: "Run task" }] }] };
+	await hooks.get("context")(v2Event);
+	assert.equal(v2Event.messages[0].content.length, 1);
+
+	const handlers = new Map();
+	const extMod = await importFresh(piExtensionPath);
+	extMod.default({ on: (event, handler) => handlers.set(event, handler) });
+	await handlers.get("session_start")({ type: "session_start" }, {});
+	const piRes = await handlers.get("context")(
+		{ type: "context", messages: [{ role: "user", content: [{ type: "text", text: "Run task" }] }] },
+		{},
+	);
+	assert.equal(piRes, undefined);
 });

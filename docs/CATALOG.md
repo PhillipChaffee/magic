@@ -1,6 +1,6 @@
 # Catalog Reference
 
-Complete reference of the **23 execution playbooks**, **77 active skills** (**52 workflow/domain skills** + **25 engineering principles**), **7 specialist sub-agents**, and **5 operational rules** shipped in `magic`.
+Complete reference of the **23 execution playbooks**, **77 active skills** (**52 workflow/domain skills** + **25 engineering principles**), **7 specialist sub-agents**, and **4 operational rules** shipped in `magic`.
 
 ---
 
@@ -38,7 +38,7 @@ Complete reference of the **23 execution playbooks**, **77 active skills** (**52
 
 | Group | Skill | Use It When |
 | --- | --- | --- |
-| **Entry & Routing** | [`/using-magic`](../skills/using-magic/SKILL.md) | Session-start bootstrap that routes tasks to `/magic-mode`, `/research`, `/proof-driven-development`, or `/magic-help` before acting |
+| **Entry & Routing** | [`/using-magic`](../skills/using-magic/SKILL.md) | Opt-in router that sends tasks to `/magic-mode`, `/research`, `/proof-driven-development`, or `/magic-help`. On for a session after `/magic-mode` or `/using-magic`, or for every session with `MAGIC_ROUTING=always` |
 | **Entry & Routing** | [`/magic-mode`](../skills/magic-mode/SKILL.md) | Default entry point for any non-trivial engineering task |
 | **Entry & Routing** | [`/magic-help`](../skills/magic-help/SKILL.md) | Unsure which skill, playbook, or principle fits your task |
 | **Entry & Routing** | [`/setup-magic`](../skills/setup-magic/SKILL.md) | Configuring per-role models and reasoning budgets |
@@ -139,12 +139,11 @@ Complete reference of the **23 execution playbooks**, **77 active skills** (**52
 
 ---
 
-## 5 Operational Rules (`rules/` & `agents.kit.md`)
+## 4 Operational Rules (`rules/` & `agents.kit.md`)
 
 | File | Scope | Rule Summary |
 | --- | --- | --- |
-| [`agents.kit.md`](../agents.kit.md) | Installed as `~/.agents/agents.md` | Distilled root instruction layer (single-bullet rules: use `rg`, separate test files, GitHub user commit attribution, workflow routing pointer, `/clean-code` and `/make-pr-easy-to-review` on PR/MR open or update, chunked large-file creation, new-repo bootstrap) |
-| [`rules/workflow-routing.md`](../rules/workflow-routing.md) | Always applied | Route engineering, code cleanup, PR/MR reviewability, research, and formal-proof tasks to `/magic-mode`, `/clean-code`, `/make-pr-easy-to-review`, `/research`, or `/proof-driven-development` before acting |
+| [`agents.kit.md`](../agents.kit.md) | Installed as `~/.agents/agents.md` | Distilled root instruction layer (single-bullet rules: use `rg`, separate test files, GitHub user commit attribution, `/clean-code` and `/make-pr-easy-to-review` on PR/MR open or update, chunked large-file creation, new-repo bootstrap) |
 | [`rules/look-it-up.md`](../rules/look-it-up.md) | Always applied | Never answer factual tool/API questions from memory; check official docs and primary sources first |
 | [`rules/new-repo-setup.md`](../rules/new-repo-setup.md) | New repo creation | Bootstrap greenfield repos from `full-lint` (`>= 95%` coverage + full hygiene gates) and set up `magic` |
 | [`rules/sleeps-and-polling.md`](../rules/sleeps-and-polling.md) | CI & background waits | Cap single-call sleeps at `<= 30s` and return control between polls |

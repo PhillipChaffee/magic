@@ -1,14 +1,13 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { BOOTSTRAP_MARKER, loadBootstrapContent } from "../../lib/bootstrap-core.js";
+import { BOOTSTRAP_MARKER, loadBootstrapContent, routingEnabled } from "../../lib/bootstrap-core.js";
 
 type ExtensionAPI = {
 	on(event: string, handler: (event: any, ctx?: any) => unknown): void;
 };
 
-const PI_PREAMBLE = `magic:using-magic bootstrap for pi
-
-The using-magic skill content is included below and is already loaded for this Pi session. Follow it now. Do not try to load using-magic again.`;
+const PI_PREAMBLE =
+	"The using-magic skill follows and is already loaded for this Pi session. Loading it again would be redundant.";
 
 const extensionDir = dirname(fileURLToPath(import.meta.url));
 const skillsDir = resolve(extensionDir, "../../skills");
@@ -25,7 +24,7 @@ export default function magicPiExtension(pi: ExtensionAPI) {
 	});
 
 	pi.on("context", async (event) => {
-		if (!injectBootstrap) return;
+		if (!injectBootstrap || !routingEnabled()) return;
 		if (event.messages.some(messageContainsBootstrap)) return;
 
 		const bootstrap = loadBootstrapContent(skillsDir, piToolMapping(), PI_PREAMBLE);
