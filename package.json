@@ -21,5 +21,11 @@
     "skills": [
       "./skills"
     ]
+  },
+  "devDependencies": {
+    "skill-evals": "0.0.1"
+  },
+  "scripts": {
+    "evals": "skill-evals"
   }
 }
